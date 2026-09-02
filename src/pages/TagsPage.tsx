@@ -131,7 +131,7 @@ function TagsPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         {tags.map((tag) => (
-          <Card key={tag.id} className="flex items-center justify-between p-4">
+          <Card key={tag.id} className="flex items-center justify-between px-4 py-3">
             <Link to={`/tags/${tag.id}`} className="flex-1">
               <TagBadge tag={tag} />
             </Link>
