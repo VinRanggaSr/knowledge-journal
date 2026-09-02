@@ -74,7 +74,7 @@ function KnowledgePage() {
           type="button"
           onClick={() => setActiveTab(ALL_TAB)}
           className={cn(
-            'shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors',
+            'shrink-0 whitespace-nowrap rounded-xl px-3.5 py-1.5 text-sm font-medium transition-colors',
             activeTab === ALL_TAB
               ? 'bg-foreground text-white'
               : 'bg-surface text-muted-foreground hover:bg-background',
@@ -88,7 +88,7 @@ function KnowledgePage() {
             type="button"
             onClick={() => setActiveTab(tag.id)}
             className={cn(
-              'shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors',
+              'shrink-0 whitespace-nowrap rounded-xl px-3.5 py-1.5 text-sm font-medium transition-colors',
               activeTab === tag.id
                 ? 'bg-foreground text-white'
                 : 'bg-surface text-muted-foreground hover:bg-background',
