@@ -63,7 +63,7 @@ function PasswordGate({ children }: PasswordGateProps) {
               autoFocus
               placeholder="Password"
               disabled={loading}
-              className="h-10 rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-foreground/20 disabled:opacity-50"
+              className="h-10 rounded-xl border border-border bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-foreground/20 disabled:opacity-50"
             />
             {error && <p className="text-sm text-red-600">{error}</p>}
             <Button type="submit" disabled={loading}>
