@@ -14,9 +14,9 @@ function Sidebar() {
   const openQuickAdd = useUiStore((s) => s.openQuickAdd);
 
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-border md:bg-surface md:p-6">
+    <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-border md:bg-background md:p-6">
       <div className="mb-8 text-lg font-semibold">Knowledge Journal</div>
-      <Button onClick={openQuickAdd} className="mb-6">
+      <Button onClick={openQuickAdd} variant="outline" className="mb-6">
         <Plus className="h-4 w-4" />
         Tambah Knowledge
       </Button>
@@ -28,8 +28,8 @@ function Sidebar() {
             end={end}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-background',
-                isActive && 'bg-background text-foreground',
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-border',
+                isActive && 'bg-border text-foreground',
               )
             }
           >
