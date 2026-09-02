@@ -34,3 +34,11 @@ export function formatDateLabel(date: string): string {
 export function formatMonthLabel(monthKey: string): string {
   return format(parseISO(`${monthKey}-01`), 'MMMM yyyy', { locale: idLocale });
 }
+
+export function stripHtml(html: string, maxLength = 140): string {
+  const text = html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}

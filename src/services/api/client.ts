@@ -1,6 +1,6 @@
 interface ApiRequestParams {
   action: string;
-  payload?: Record<string, unknown>;
+  payload?: object;
 }
 
 interface ApiResponse<T> {

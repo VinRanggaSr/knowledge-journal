@@ -1,6 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { BookText, Tags as TagsIcon } from 'lucide-react';
+import { BookText, Tags as TagsIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useUiStore } from '@/store/uiStore';
 
 const navItems = [
   { to: '/', label: 'Timeline', icon: BookText, end: true },
@@ -8,9 +10,15 @@ const navItems = [
 ];
 
 function Sidebar() {
+  const openQuickAdd = useUiStore((s) => s.openQuickAdd);
+
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-border md:bg-surface md:p-6">
       <div className="mb-8 text-lg font-semibold">Knowledge Journal</div>
+      <Button onClick={openQuickAdd} className="mb-6">
+        <Plus className="h-4 w-4" />
+        Tambah Knowledge
+      </Button>
       <nav className="flex flex-col gap-1">
         {navItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink

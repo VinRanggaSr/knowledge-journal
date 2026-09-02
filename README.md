@@ -2,7 +2,7 @@
 
 Journal knowledge harian dengan hierarki Day → Week (Senin–Minggu) → Month, tag many-to-many, database via Google Sheets, backend Google Apps Script, proxy Netlify Functions.
 
-Status: **FASE 0 selesai** — project shell, design tokens, routing placeholder, dan skeleton backend sudah jadi & sudah lolos build. Fitur (Tags, Knowledge CRUD, Summary, dst) akan menyusul di prompt/fase berikutnya.
+Status: **Semua fitur inti sudah diimplementasikan** — Tags CRUD, Knowledge item CRUD (dengan rich text + multi-tag), hierarki Timeline → Month → Week → Day, Weekly/Monthly Summary editor, dan Tag Detail page. Sudah lolos `npm run build` tanpa error.
 
 ## Langkah Setup (lakukan sekali di awal)
 
@@ -78,5 +78,22 @@ Buat file `.env` lokal (tidak di-commit) berisi `SITE_PASSWORD=vcknowledge` supa
 ## Struktur Project
 Lihat komentar di masing-masing file `src/services/api/*.ts` untuk placeholder fitur yang akan diisi di fase berikutnya.
 
-## Langkah selanjutnya
-Setelah semua langkah di atas berhasil, lanjut ke prompt **FASE 1: Tags CRUD**.
+## PENTING: Update Apps Script kamu
+Backend Apps Script sekarang sudah lengkap (Tags, Knowledge, Summary CRUD) — bukan cuma `setupSheets()` lagi. Kalau kamu sudah pernah deploy versi awal (yang cuma ada `ping`), **wajib update**:
+
+1. Buka Apps Script editor project kamu.
+2. Select-all isi `Code.gs` yang lama, hapus.
+3. Paste seluruh isi `apps-script/Code.gs` yang baru (dari zip ini).
+4. Klik **Terapkan (Deploy) > Kelola deployment (Manage deployments)**.
+5. Klik ikon pensil (Edit) di deployment yang sudah ada.
+6. Di dropdown **Version**, pilih **New version**.
+7. Klik **Deploy**.
+
+**Kenapa harus "New version"?** Karena menyimpan kode di editor Apps Script TIDAK otomatis memperbarui web app yang sudah live — web app tetap menjalankan snapshot kode versi lama sampai kamu deploy versi baru secara eksplisit. URL web app-nya tetap sama, jadi tidak perlu update env var Netlify.
+
+## Fitur yang sudah bisa dipakai
+- **Tags**: tambah/edit/hapus tag dengan 7 pilihan warna, klik tag untuk lihat semua knowledge dengan tag itu
+- **Knowledge harian**: tambah/edit/hapus item (judul, rich text description, multi-tag), navigasi hari sebelum/berikutnya
+- **Timeline**: ringkasan bulan-bulan yang ada knowledge-nya, shortcut ke hari ini
+- **Month/Week page**: drill-down dari bulan → minggu → hari, plus editor ringkasan mingguan & bulanan (rich text, tersimpan terpisah)
+- **Tambah cepat**: tombol "+" di sidebar (desktop) atau bottom nav (mobile) untuk langsung catat knowledge hari ini dari halaman manapun
