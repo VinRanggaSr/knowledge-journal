@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { BookText, Tags as TagsIcon, Plus } from 'lucide-react';
+import { BookText, Search, Tags as TagsIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useUiStore } from '@/store/uiStore';
 
 const navItems = [
   { to: '/', label: 'Timeline', icon: BookText, end: true },
+  { to: '/knowledge', label: 'Knowledge', icon: Search, end: false },
   { to: '/tags', label: 'Tags', icon: TagsIcon, end: false },
 ];
 

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { BookText, Plus, Tags as TagsIcon } from 'lucide-react';
+import { BookText, Plus, Search, Tags as TagsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUiStore } from '@/store/uiStore';
 
@@ -20,6 +20,19 @@ function BottomNav() {
       >
         <BookText className="h-5 w-5" />
         Timeline
+      </NavLink>
+
+      <NavLink
+        to="/knowledge"
+        className={({ isActive }) =>
+          cn(
+            'flex flex-col items-center gap-1 px-3 py-1 text-xs font-medium text-muted-foreground',
+            isActive && 'text-foreground',
+          )
+        }
+      >
+        <Search className="h-5 w-5" />
+        Knowledge
       </NavLink>
 
       <button
