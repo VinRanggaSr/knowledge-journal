@@ -98,6 +98,13 @@ function findRowNumberByKey_(sheetName, keyValue) {
   return -1;
 }
 
+function normalizeDate_(value) {
+  if (value instanceof Date) {
+    return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  }
+  return value;
+}
+
 function isoWeekKey_(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   const target = new Date(d.valueOf());
@@ -161,7 +168,7 @@ function deleteTag_(payload) {
 function listKnowledge_(payload) {
   let items = readSheetAsObjects_(SHEET_NAMES.KNOWLEDGE).map((item) => ({
     id: item.id,
-    date: item.date,
+    date: normalizeDate_(item.date),
     title: item.title,
     descHtml: item.descHtml,
     tagIds: safeParseJson_(item.tagIds, []),
