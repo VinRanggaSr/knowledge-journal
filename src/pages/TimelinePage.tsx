@@ -1,20 +1,43 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
+import { ArrowRight, BookOpen, MousePointer2, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
-import { listKnowledge } from '@/services/api/knowledgeApi';
+import KnowledgeItemCard from '@/components/KnowledgeItemCard';
+import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
+import { listTags } from '@/services/api/tagsApi';
 import { formatMonthLabel, getWeekKey } from '@/lib/dateHelpers';
+import type { KnowledgeItem } from '@/types';
 
 function TimelinePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const today = format(new Date(), 'yyyy-MM-dd');
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['knowledge', {}],
     queryFn: () => listKnowledge({}),
   });
+  const { data: tags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteKnowledgeItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge'] });
+    },
+  });
+
+  function handleDelete(item: KnowledgeItem) {
+    if (window.confirm(`Hapus knowledge "${item.title}"?`)) {
+      deleteMutation.mutate({ id: item.id });
+    }
+  }
+
+  const recentItems = useMemo(
+    () => [...items].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 3),
+    [items],
+  );
 
   const months = useMemo(() => {
     const map = new Map<string, number>();
@@ -101,6 +124,30 @@ function TimelinePage() {
           </Link>
         ))}
       </div>
+
+      {recentItems.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <h2 className="font-semibold">Baru Ditambahkan</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Link
+              to="/knowledge/new"
+              className="flex min-h-[220px] flex-col items-center justify-center gap-2 rounded-[30px] border border-dashed border-border text-muted-foreground hover:bg-background"
+            >
+              <Plus className="h-5 w-5" />
+              <span className="text-sm font-medium">Tambah Knowledge</span>
+            </Link>
+            {recentItems.map((item) => (
+              <KnowledgeItemCard
+                key={item.id}
+                item={item}
+                tags={tags}
+                onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
+                onDelete={() => handleDelete(item)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
