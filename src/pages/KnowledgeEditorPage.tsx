@@ -96,7 +96,7 @@ function KnowledgeEditorPage() {
     value: descHtml,
     onChange: setDescHtml,
     placeholder: 'Tulis detail knowledge di sini...',
-    contentClassName: 'min-h-[50vh] rounded-[30px] px-6 py-4',
+    contentClassName: 'min-h-[50vh] rounded-[30px] px-6 py-4 md:h-full md:flex-1',
   });
 
   return (
@@ -147,9 +147,9 @@ function KnowledgeEditorPage() {
       </div>
 
       {editor && (
-        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
           <RichTextToolbar editor={editor} layout="row" className="md:hidden" />
-          <EditorContent editor={editor} className="md:flex-1" />
+          <EditorContent editor={editor} className="md:flex md:flex-1 md:flex-col" />
           <RichTextToolbar editor={editor} layout="panel" className="hidden md:flex md:w-60 md:shrink-0" />
         </div>
       )}
