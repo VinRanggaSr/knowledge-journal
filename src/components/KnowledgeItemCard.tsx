@@ -2,20 +2,23 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import TagBadge from '@/components/TagBadge';
 import { stripHtml } from '@/lib/dateHelpers';
+import { cn } from '@/lib/utils';
 import type { KnowledgeItem, Tag } from '@/types';
 
 interface KnowledgeItemCardProps {
   item: KnowledgeItem;
   tags: Tag[];
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  className?: string;
 }
 
-function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardProps) {
+function KnowledgeItemCard({ item, tags, onEdit, onDelete, className }: KnowledgeItemCardProps) {
   const itemTags = tags.filter((t) => item.tagIds.includes(t.id));
+  const showActions = onEdit || onDelete;
 
   return (
-    <div className="h-full rounded-[30px] border border-border bg-[#eeeeec] p-1.5">
+    <div className={cn('h-full rounded-[30px] border border-border bg-[#eeeeec] p-1.5', className)}>
       <Card className="flex h-full flex-col items-center gap-2 rounded-3xl border-0 p-4 text-center">
         {itemTags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1.5">
@@ -31,24 +34,30 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
           </div>
         )}
-        <div className="mt-auto flex items-center justify-center gap-2 pt-1">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Hapus
-          </button>
-        </div>
+        {showActions && (
+          <div className="mt-auto flex items-center justify-center gap-2 pt-1">
+            {onEdit && (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                Edit
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Hapus
+              </button>
+            )}
+          </div>
+        )}
       </Card>
     </div>
   );

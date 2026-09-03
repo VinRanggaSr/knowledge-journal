@@ -5,7 +5,9 @@ import { format } from 'date-fns';
 import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
+import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge } from '@/services/api/knowledgeApi';
+import { listTags } from '@/services/api/tagsApi';
 import { formatMonthLabel, getWeekKey } from '@/lib/dateHelpers';
 import type { KnowledgeItem } from '@/types';
 
@@ -16,6 +18,7 @@ function TimelinePage() {
     queryKey: ['knowledge', {}],
     queryFn: () => listKnowledge({}),
   });
+  const { data: tags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
 
   const months = useMemo(() => {
     const map = new Map<string, { count: number; recent: KnowledgeItem[] }>();
@@ -104,15 +107,12 @@ function TimelinePage() {
               <ArrowRight className="h-4 w-4 text-muted-foreground" />
             </Link>
 
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="border-t border-dashed border-border" />
+
+            <div className="flex gap-3 overflow-x-auto pb-1">
               {recent.map((item) => (
-                <Link
-                  key={item.id}
-                  to={`/knowledge/${item.id}/edit`}
-                  state={{ item }}
-                  className="max-w-[200px] shrink-0 rounded-xl border border-border bg-background px-3 py-2 text-sm hover:bg-border"
-                >
-                  <p className="truncate font-medium">{item.title}</p>
+                <Link key={item.id} to={`/knowledge/${item.id}/edit`} state={{ item }} className="w-64 shrink-0">
+                  <KnowledgeItemCard item={item} tags={tags} />
                 </Link>
               ))}
             </div>
