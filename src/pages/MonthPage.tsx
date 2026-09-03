@@ -1,14 +1,56 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowRight, CalendarRange } from 'lucide-react';
+import { ArrowRight, CalendarRange, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import RichTextEditor from '@/components/RichTextEditor';
 import { listKnowledge } from '@/services/api/knowledgeApi';
-import { getMonthlySummary, saveMonthlySummary } from '@/services/api/summaryApi';
-import { formatMonthLabel, getWeekKey } from '@/lib/dateHelpers';
+import { getMonthlySummary, getWeeklySummary, saveMonthlySummary } from '@/services/api/summaryApi';
+import { formatMonthLabel, getWeekKey, stripHtml } from '@/lib/dateHelpers';
+
+interface WeekCardProps {
+  weekKey: string;
+  count: number;
+}
+
+function WeekCard({ weekKey, count }: WeekCardProps) {
+  const { data: summary } = useQuery({
+    queryKey: ['weeklySummary', weekKey],
+    queryFn: () => getWeeklySummary(weekKey),
+  });
+
+  const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
+
+  return (
+    <Card className="flex flex-col gap-4 p-4">
+      <Link to={`/weeks/${weekKey}`} className="flex items-center justify-between">
+        <div>
+          <p className="font-semibold">Minggu {weekKey}</p>
+          <p className="text-sm text-muted-foreground">{count} knowledge item</p>
+        </div>
+        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+      </Link>
+
+      <div className="border-t border-dashed border-border" />
+
+      {summaryText ? (
+        <div className="relative max-h-24 overflow-hidden">
+          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
+        </div>
+      ) : (
+        <EmptyState
+          icon={FileText}
+          title="Belum ada ringkasan mingguan"
+          description="Tulis ringkasan minggu ini di halaman detail minggu."
+          className="py-6"
+        />
+      )}
+    </Card>
+  );
+}
 
 function MonthPage() {
   const { monthKey = '' } = useParams();
@@ -65,15 +107,7 @@ function MonthPage() {
 
       <div className="flex flex-col gap-3">
         {weeks.map(([weekKey, count]) => (
-          <Link key={weekKey} to={`/weeks/${weekKey}`}>
-            <Card className="flex items-center justify-between p-4 hover:bg-background/50">
-              <div>
-                <p className="font-semibold">Minggu {weekKey}</p>
-                <p className="text-sm text-muted-foreground">{count} knowledge item</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            </Card>
-          </Link>
+          <WeekCard key={weekKey} weekKey={weekKey} count={count} />
         ))}
       </div>
 
