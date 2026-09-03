@@ -31,11 +31,11 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
           </div>
         )}
-        <div className="mt-auto flex items-center justify-center gap-2 pt-1">
+        <div className="mt-auto flex w-full items-center gap-2 pt-1">
           <button
             type="button"
             onClick={onEdit}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
           >
             <Pencil className="h-3.5 w-3.5" />
             Edit
@@ -43,7 +43,7 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
           <button
             type="button"
             onClick={onDelete}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
           >
             <Trash2 className="h-3.5 w-3.5" />
             Hapus
