@@ -201,7 +201,7 @@ export function RichTextToolbar({ editor, layout = 'row', className }: RichTextT
 
   if (layout === 'panel') {
     return (
-      <div className={cn('flex flex-col gap-3 rounded-xl border border-border bg-background p-3', className)}>
+      <div className={cn('flex flex-col gap-3 rounded-[30px] border border-border bg-background p-4', className)}>
         <p className="text-xs font-medium text-muted-foreground">Text Editor</p>
         {fontPicker}
         <div className="w-full border-t border-dashed border-border" />

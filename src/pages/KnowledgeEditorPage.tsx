@@ -96,7 +96,7 @@ function KnowledgeEditorPage() {
     value: descHtml,
     onChange: setDescHtml,
     placeholder: 'Tulis detail knowledge di sini...',
-    contentClassName: 'min-h-[50vh]',
+    contentClassName: 'min-h-[50vh] rounded-[30px]',
   });
 
   return (
