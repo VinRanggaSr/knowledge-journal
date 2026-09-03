@@ -9,13 +9,13 @@ const badgeVariants = cva(
     variants: {
       color: {
         neutral: 'bg-background text-muted-foreground',
-        orange: 'bg-tag-orange-bg text-tag-orange-text',
-        violet: 'bg-tag-violet-bg text-tag-violet-text',
-        teal: 'bg-tag-teal-bg text-tag-teal-text',
-        blue: 'bg-tag-blue-bg text-tag-blue-text',
-        pink: 'bg-tag-pink-bg text-tag-pink-text',
-        green: 'bg-tag-green-bg text-tag-green-text',
-        yellow: 'bg-tag-yellow-bg text-tag-yellow-text',
+        orange: 'bg-background text-tag-orange-text',
+        violet: 'bg-background text-tag-violet-text',
+        teal: 'bg-background text-tag-teal-text',
+        blue: 'bg-background text-tag-blue-text',
+        pink: 'bg-background text-tag-pink-text',
+        green: 'bg-background text-tag-green-text',
+        yellow: 'bg-background text-tag-yellow-text',
       },
     },
     defaultVariants: {
@@ -30,8 +30,13 @@ interface BadgeProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'color'>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, color, ...props }: BadgeProps) {
-  return <span className={cn(badgeVariants({ color, className }))} {...props} />;
+function Badge({ className, color, children, ...props }: BadgeProps) {
+  return (
+    <span className={cn(badgeVariants({ color, className }))} {...props}>
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+      {children}
+    </span>
+  );
 }
 
 export { Badge, badgeVariants };
