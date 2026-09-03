@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import RichTextEditor from '@/components/RichTextEditor';
-import { listKnowledge } from '@/services/api/knowledgeApi';
+import KnowledgeItemCard from '@/components/KnowledgeItemCard';
+import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
+import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
+import { listTags } from '@/services/api/tagsApi';
 import { getWeeklySummary, saveWeeklySummary } from '@/services/api/summaryApi';
-import { getWeekDates, getWeekKey, formatWeekRangeLabel } from '@/lib/dateHelpers';
+import { getWeekDates, getWeekKey, formatWeekRangeLabel, formatDateLabel } from '@/lib/dateHelpers';
 import { cn } from '@/lib/utils';
+import type { KnowledgeItem } from '@/types';
 
 function WeekPage() {
   const { weekKey = '' } = useParams();
@@ -19,11 +23,25 @@ function WeekPage() {
 
   const today = format(new Date(), 'yyyy-MM-dd');
   const weekDates = useMemo(() => getWeekDates(weekKey), [weekKey]);
+  const weekDateStrs = useMemo(() => weekDates.map((d) => format(d, 'yyyy-MM-dd')), [weekDates]);
+
+  const [selectedDate, setSelectedDate] = useState(
+    () => weekDateStrs.find((d) => d === today) ?? weekDateStrs[0] ?? today,
+  );
+
+  useEffect(() => {
+    setSelectedDate((prev) =>
+      weekDateStrs.includes(prev) ? prev : weekDateStrs.find((d) => d === today) ?? weekDateStrs[0] ?? today,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weekKey]);
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['knowledge', { weekKey }],
     queryFn: () => listKnowledge({ weekKey }),
   });
+
+  const { data: allTags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
 
   const { data: summary } = useQuery({
     queryKey: ['weeklySummary', weekKey],
@@ -43,11 +61,35 @@ function WeekPage() {
     },
   });
 
+  const [addOpen, setAddOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteKnowledgeItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge'] });
+    },
+  });
+
+  function handleDelete(item: KnowledgeItem) {
+    if (window.confirm(`Hapus knowledge "${item.title}"?`)) {
+      deleteMutation.mutate({ id: item.id });
+    }
+  }
+
   const countByDate = useMemo(() => {
     const map = new Map<string, number>();
     items.forEach((item) => map.set(item.date, (map.get(item.date) ?? 0) + 1));
     return map;
   }, [items]);
+
+  const dayItems = useMemo(
+    () =>
+      items
+        .filter((item) => item.date === selectedDate)
+        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
+    [items, selectedDate],
+  );
 
   function goToWeek(offset: number) {
     const base = weekDates[0] ?? new Date();
@@ -95,39 +137,79 @@ function WeekPage() {
         </Button>
       </Card>
 
-      {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
-
       <div className="flex gap-2 overflow-x-auto pb-1">
         {weekDates.map((date) => {
           const dateStr = format(date, 'yyyy-MM-dd');
-          const isToday = dateStr === today;
+          const isSelected = dateStr === selectedDate;
           const count = countByDate.get(dateStr) ?? 0;
 
           return (
-            <Link
+            <button
               key={dateStr}
-              to={`/days/${dateStr}`}
+              type="button"
+              onClick={() => setSelectedDate(dateStr)}
               className={cn(
                 'flex min-w-[64px] flex-1 flex-col items-center gap-1 rounded-2xl border px-3 py-3 text-center transition-colors',
-                isToday
+                isSelected
                   ? 'border-accent-orange bg-accent-orange/10 text-accent-orange'
                   : 'border-border bg-surface text-muted-foreground hover:bg-background',
               )}
             >
-              <span className="text-xs">{format(date, 'd')}</span>
               <span className="text-sm font-medium capitalize">
                 {format(date, 'EEE', { locale: idLocale })}
               </span>
+              <span className="text-xs">{format(date, 'd')}</span>
               <span
                 className={cn(
                   'mt-1 h-1.5 w-1.5 rounded-full',
                   count > 0 ? 'bg-current' : 'bg-transparent',
                 )}
               />
-            </Link>
+            </button>
           );
         })}
       </div>
+
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-semibold capitalize">{formatDateLabel(selectedDate)}</h2>
+        <Button size="sm" onClick={() => setAddOpen(true)}>
+          <Plus className="h-4 w-4" />
+          Tambah
+        </Button>
+      </div>
+
+      {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
+
+      {!isLoading && dayItems.length === 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Belum ada knowledge di hari ini</CardTitle>
+            <CardDescription>Klik "Tambah" untuk mencatat knowledge pertama hari ini.</CardDescription>
+          </CardHeader>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {dayItems.map((item) => (
+          <KnowledgeItemCard
+            key={item.id}
+            item={item}
+            tags={allTags}
+            onEdit={() => setEditingItem(item)}
+            onDelete={() => handleDelete(item)}
+          />
+        ))}
+      </div>
+
+      <KnowledgeItemFormSheet open={addOpen} onOpenChange={setAddOpen} defaultDate={selectedDate} />
+      {editingItem && (
+        <KnowledgeItemFormSheet
+          item={editingItem}
+          defaultDate={selectedDate}
+          open={!!editingItem}
+          onOpenChange={(open) => !open && setEditingItem(null)}
+        />
+      )}
     </div>
   );
 }
