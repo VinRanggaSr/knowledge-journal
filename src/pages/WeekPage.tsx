@@ -155,10 +155,10 @@ function WeekPage() {
                   : 'border-border bg-surface text-muted-foreground hover:bg-background',
               )}
             >
-              <span className="text-sm font-medium capitalize">
+              <span className="text-xs font-normal capitalize">
                 {format(date, 'EEE', { locale: idLocale })}
               </span>
-              <span className="text-xs">{format(date, 'd')}</span>
+              <span className="text-2xl font-bold">{format(date, 'd')}</span>
               <span
                 className={cn(
                   'mt-1 h-1.5 w-1.5 rounded-full',
