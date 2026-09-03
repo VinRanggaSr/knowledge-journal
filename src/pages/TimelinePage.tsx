@@ -36,7 +36,7 @@ function MonthCard({ monthKey, count }: MonthCardProps) {
 
       {summaryText ? (
         <div className="relative max-h-24 overflow-hidden">
-          <p className="text-sm text-muted-foreground">{summaryText}</p>
+          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
         </div>
       ) : (
