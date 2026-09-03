@@ -3,6 +3,8 @@ import {
   getISOWeekYear,
   startOfISOWeek,
   endOfISOWeek,
+  setISOWeek,
+  addDays,
   format,
   parseISO,
 } from 'date-fns';
@@ -25,6 +27,28 @@ export function getMonthKey(date: Date | string): string {
 export function getWeekRange(date: Date | string): { start: Date; end: Date } {
   const d = typeof date === 'string' ? parseISO(date) : date;
   return { start: startOfISOWeek(d), end: endOfISOWeek(d) };
+}
+
+/** Senin-Minggu dari sebuah weekKey ("2026-W36") */
+export function getWeekDates(weekKey: string): Date[] {
+  const [yearStr, weekStr] = weekKey.split('-W');
+  const year = Number(yearStr);
+  const week = Number(weekStr);
+  if (!year || !week) return [];
+  const base = setISOWeek(new Date(year, 0, 4), week);
+  const start = startOfISOWeek(base);
+  return Array.from({ length: 7 }, (_, i) => addDays(start, i));
+}
+
+export function formatWeekRangeLabel(dates: Date[]): string {
+  if (dates.length === 0) return '';
+  const start = dates[0];
+  const end = dates[dates.length - 1];
+  const sameMonth = format(start, 'MM-yyyy') === format(end, 'MM-yyyy');
+  if (sameMonth) {
+    return `${format(start, 'd')} - ${format(end, 'd MMMM yyyy', { locale: idLocale })}`;
+  }
+  return `${format(start, 'd MMM', { locale: idLocale })} - ${format(end, 'd MMM yyyy', { locale: idLocale })}`;
 }
 
 export function formatDateLabel(date: string): string {
