@@ -6,6 +6,7 @@ import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
+import ClampedText from '@/components/ClampedText';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
@@ -39,10 +40,7 @@ function WeeklySummaryCard({ weekKey }: { weekKey: string }) {
       </div>
 
       {summaryText ? (
-        <div className="relative max-h-48 overflow-hidden">
-          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent" />
-        </div>
+        <ClampedText text={summaryText} className="max-h-48" gradientFrom="background" />
       ) : (
         <EmptyState
           icon={FileText}

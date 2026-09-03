@@ -1,6 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import TagBadge from '@/components/TagBadge';
+import ClampedText from '@/components/ClampedText';
 import { stripHtml } from '@/lib/dateHelpers';
 import { cn } from '@/lib/utils';
 import type { KnowledgeItem, Tag } from '@/types';
@@ -29,10 +30,7 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete, className }: Knowledg
         )}
         <h3 className="line-clamp-2 font-semibold">{item.title}</h3>
         {item.descHtml && (
-          <div className="relative max-h-[4.5rem] w-full flex-1 overflow-hidden">
-            <p className="text-sm leading-6 text-muted-foreground">{stripHtml(item.descHtml, Infinity)}</p>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
-          </div>
+          <ClampedText text={stripHtml(item.descHtml, Infinity)} className="max-h-[4.5rem] w-full flex-1" />
         )}
         {showActions && (
           <div className="mt-auto flex items-center justify-center gap-2 pt-1">

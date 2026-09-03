@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { ArrowRight, BookOpen, FileText, MousePointer2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
+import ClampedText from '@/components/ClampedText';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { getMonthlySummary } from '@/services/api/summaryApi';
 import { formatMonthLabel, getWeekKey, stripHtml } from '@/lib/dateHelpers';
@@ -35,10 +36,7 @@ function MonthCard({ monthKey, count }: MonthCardProps) {
       <div className="border-t border-dashed border-border" />
 
       {summaryText ? (
-        <div className="relative max-h-24 overflow-hidden">
-          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
-        </div>
+        <ClampedText text={summaryText} className="max-h-24" />
       ) : (
         <EmptyState
           icon={FileText}

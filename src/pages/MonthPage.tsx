@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, CalendarRange, FileText, Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
+import ClampedText from '@/components/ClampedText';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { getMonthlySummary, getWeeklySummary } from '@/services/api/summaryApi';
 import { formatMonthLabel, getWeekKey, stripHtml } from '@/lib/dateHelpers';
@@ -34,10 +35,7 @@ function WeekCard({ weekKey, count }: WeekCardProps) {
       <div className="border-t border-dashed border-border" />
 
       {summaryText ? (
-        <div className="relative max-h-24 overflow-hidden">
-          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
-        </div>
+        <ClampedText text={summaryText} className="max-h-24" />
       ) : (
         <EmptyState
           icon={FileText}
@@ -76,10 +74,7 @@ function MonthlySummaryCard({ monthKey }: { monthKey: string }) {
       </div>
 
       {summaryText ? (
-        <div className="relative max-h-48 overflow-hidden">
-          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent" />
-        </div>
+        <ClampedText text={summaryText} className="max-h-48" gradientFrom="background" />
       ) : (
         <EmptyState
           icon={FileText}
