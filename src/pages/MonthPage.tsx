@@ -46,6 +46,7 @@ function WeekCard({ weekKey, count }: WeekCardProps) {
           title="Belum ada ringkasan mingguan"
           description="Tulis ringkasan minggu ini di halaman detail minggu."
           className="py-6"
+          compact
         />
       )}
     </Card>

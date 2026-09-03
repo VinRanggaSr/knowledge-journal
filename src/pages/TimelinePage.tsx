@@ -45,6 +45,7 @@ function MonthCard({ monthKey, count }: MonthCardProps) {
           title="Belum ada ringkasan bulanan"
           description="Tulis ringkasan bulan ini di halaman detail bulan."
           className="py-6"
+          compact
         />
       )}
     </Card>
