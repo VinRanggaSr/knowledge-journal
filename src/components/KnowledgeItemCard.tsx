@@ -15,7 +15,7 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
   const itemTags = tags.filter((t) => item.tagIds.includes(t.id));
 
   return (
-    <div className="h-full rounded-[30px] border border-border bg-background p-1.5">
+    <div className="h-full rounded-[30px] border border-border bg-border p-1.5">
       <Card className="flex h-full flex-col items-center gap-2 rounded-3xl border-0 p-4 text-center">
         {itemTags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1.5">
