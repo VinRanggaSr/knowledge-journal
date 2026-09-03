@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { CalendarDays, ArrowRight } from 'lucide-react';
+import { ArrowRight, MousePointer2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { formatMonthLabel } from '@/lib/dateHelpers';
@@ -35,17 +35,34 @@ function TimelinePage() {
       </div>
 
       <Link to={`/days/${today}`}>
-        <Card className="flex items-center justify-between p-5 hover:bg-background/50">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-orange/10 text-accent-orange">
-              <CalendarDays className="h-5 w-5" />
-            </div>
+        <Card className="flex items-center justify-between gap-4 border-dashed p-5 hover:bg-background/50">
+          <div className="flex flex-col items-start gap-3">
             <div>
-              <p className="font-semibold">Hari ini</p>
-              <p className="text-sm text-muted-foreground">{todayCount} knowledge item</p>
+              <p className="font-semibold">Catat knowledge hari ini</p>
+              <p className="text-sm text-muted-foreground">
+                Simpan hal baru yang kamu pelajari hari ini · {todayCount} tercatat
+              </p>
+            </div>
+            <span className="inline-flex items-center rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium">
+              Buka Hari Ini
+            </span>
+          </div>
+
+          <div className="relative hidden h-20 w-24 shrink-0 sm:block">
+            <div className="absolute inset-0 flex flex-col gap-1.5 rounded-xl border border-border bg-background p-2.5">
+              <div className="flex gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-orange" />
+                <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                <span className="h-1.5 w-1.5 rounded-full bg-border" />
+              </div>
+              <div className="mt-1 h-1.5 w-3/4 rounded-full bg-border" />
+              <div className="h-1.5 w-1/2 rounded-full bg-border" />
+              <div className="h-1.5 w-2/3 rounded-full bg-border" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-accent-orange text-white">
+              <MousePointer2 className="h-3.5 w-3.5" />
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 text-muted-foreground" />
         </Card>
       </Link>
 
