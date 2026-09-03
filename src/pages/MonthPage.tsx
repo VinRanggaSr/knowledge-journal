@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, CalendarRange, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
-import RichTextEditor from '@/components/RichTextEditor';
 import { listKnowledge } from '@/services/api/knowledgeApi';
-import { getMonthlySummary, getWeeklySummary, saveMonthlySummary } from '@/services/api/summaryApi';
+import { getMonthlySummary, getWeeklySummary } from '@/services/api/summaryApi';
 import { formatMonthLabel, getWeekKey, stripHtml } from '@/lib/dateHelpers';
 
 interface WeekCardProps {
@@ -53,31 +52,49 @@ function WeekCard({ weekKey, count }: WeekCardProps) {
   );
 }
 
-function MonthPage() {
-  const { monthKey = '' } = useParams();
-  const queryClient = useQueryClient();
-
-  const { data: items = [], isLoading } = useQuery({
-    queryKey: ['knowledge', { monthKey }],
-    queryFn: () => listKnowledge({ monthKey }),
-  });
-
+function MonthlySummaryCard({ monthKey }: { monthKey: string }) {
+  const navigate = useNavigate();
   const { data: summary } = useQuery({
     queryKey: ['monthlySummary', monthKey],
     queryFn: () => getMonthlySummary(monthKey),
   });
 
-  const [summaryHtml, setSummaryHtml] = useState('');
+  const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
 
-  useEffect(() => {
-    setSummaryHtml(summary?.summaryHtml ?? '');
-  }, [summary?.summaryHtml]);
+  return (
+    <Card className="flex flex-col gap-3 p-5">
+      <h2 className="font-semibold">Ringkasan Bulanan</h2>
 
-  const saveMutation = useMutation({
-    mutationFn: saveMonthlySummary,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monthlySummary', monthKey] });
-    },
+      {summaryText ? (
+        <>
+          <div className="relative max-h-48 overflow-hidden">
+            <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
+          </div>
+          <Button asChild variant="outline" className="self-start">
+            <Link to={`/months/${monthKey}/summary`}>Edit Ringkasan</Link>
+          </Button>
+        </>
+      ) : (
+        <EmptyState
+          icon={FileText}
+          title="Belum ada ringkasan bulanan"
+          description="Tulis ringkasan knowledge bulan ini."
+          action={{ label: 'Tambah Ringkasan', onClick: () => navigate(`/months/${monthKey}/summary`) }}
+          className="py-6"
+          compact
+        />
+      )}
+    </Card>
+  );
+}
+
+function MonthPage() {
+  const { monthKey = '' } = useParams();
+
+  const { data: items = [], isLoading } = useQuery({
+    queryKey: ['knowledge', { monthKey }],
+    queryFn: () => listKnowledge({ monthKey }),
   });
 
   const weeks = useMemo(() => {
@@ -112,21 +129,7 @@ function MonthPage() {
         ))}
       </div>
 
-      <Card className="flex flex-col gap-3 p-5">
-        <h2 className="font-semibold">Ringkasan Bulanan</h2>
-        <RichTextEditor
-          value={summaryHtml}
-          onChange={setSummaryHtml}
-          placeholder="Tulis ringkasan knowledge bulan ini..."
-        />
-        <Button
-          onClick={() => saveMutation.mutate({ monthKey, summaryHtml })}
-          disabled={saveMutation.isPending}
-          className="self-start"
-        >
-          {saveMutation.isPending ? 'Menyimpan...' : 'Simpan Ringkasan'}
-        </Button>
-      </Card>
+      {items.length > 0 && <MonthlySummaryCard monthKey={monthKey} />}
     </div>
   );
 }

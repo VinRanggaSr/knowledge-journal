@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, FileText, Plus } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
@@ -7,14 +7,50 @@ import { id as idLocale } from 'date-fns/locale';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
-import RichTextEditor from '@/components/RichTextEditor';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
-import { getWeeklySummary, saveWeeklySummary } from '@/services/api/summaryApi';
-import { getWeekDates, getWeekKey, formatWeekRangeLabel, formatDateLabel } from '@/lib/dateHelpers';
+import { getWeeklySummary } from '@/services/api/summaryApi';
+import { getWeekDates, getWeekKey, formatWeekRangeLabel, formatDateLabel, stripHtml } from '@/lib/dateHelpers';
 import { cn } from '@/lib/utils';
 import type { KnowledgeItem } from '@/types';
+
+function WeeklySummaryCard({ weekKey }: { weekKey: string }) {
+  const navigate = useNavigate();
+  const { data: summary } = useQuery({
+    queryKey: ['weeklySummary', weekKey],
+    queryFn: () => getWeeklySummary(weekKey),
+  });
+
+  const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
+
+  return (
+    <Card className="flex flex-col gap-3 p-5">
+      <h2 className="font-semibold">Ringkasan Mingguan</h2>
+
+      {summaryText ? (
+        <>
+          <div className="relative max-h-48 overflow-hidden">
+            <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
+          </div>
+          <Button asChild variant="outline" className="self-start">
+            <Link to={`/weeks/${weekKey}/summary`}>Edit Ringkasan</Link>
+          </Button>
+        </>
+      ) : (
+        <EmptyState
+          icon={FileText}
+          title="Belum ada ringkasan mingguan"
+          description="Tulis ringkasan knowledge minggu ini."
+          action={{ label: 'Tambah Ringkasan', onClick: () => navigate(`/weeks/${weekKey}/summary`) }}
+          className="py-6"
+          compact
+        />
+      )}
+    </Card>
+  );
+}
 
 function WeekPage() {
   const { weekKey = '' } = useParams();
@@ -42,24 +78,6 @@ function WeekPage() {
   });
 
   const { data: allTags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
-
-  const { data: summary } = useQuery({
-    queryKey: ['weeklySummary', weekKey],
-    queryFn: () => getWeeklySummary(weekKey),
-  });
-
-  const [summaryHtml, setSummaryHtml] = useState('');
-
-  useEffect(() => {
-    setSummaryHtml(summary?.summaryHtml ?? '');
-  }, [summary?.summaryHtml]);
-
-  const saveMutation = useMutation({
-    mutationFn: saveWeeklySummary,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weeklySummary', weekKey] });
-    },
-  });
 
   const deleteMutation = useMutation({
     mutationFn: deleteKnowledgeItem,
@@ -118,21 +136,7 @@ function WeekPage() {
         </button>
       </div>
 
-      <Card className="flex flex-col gap-3 p-5">
-        <h2 className="font-semibold">Ringkasan Mingguan</h2>
-        <RichTextEditor
-          value={summaryHtml}
-          onChange={setSummaryHtml}
-          placeholder="Tulis ringkasan knowledge minggu ini..."
-        />
-        <Button
-          onClick={() => saveMutation.mutate({ weekKey, summaryHtml })}
-          disabled={saveMutation.isPending}
-          className="self-start"
-        >
-          {saveMutation.isPending ? 'Menyimpan...' : 'Simpan Ringkasan'}
-        </Button>
-      </Card>
+      {items.length > 0 && <WeeklySummaryCard weekKey={weekKey} />}
 
       <div className="flex gap-2 overflow-x-auto pb-1">
         {weekDates.map((date) => {

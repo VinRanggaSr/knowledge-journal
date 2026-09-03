@@ -7,13 +7,16 @@ import KnowledgePage from '@/pages/KnowledgePage';
 import KnowledgeEditorPage from '@/pages/KnowledgeEditorPage';
 import TagsPage from '@/pages/TagsPage';
 import TagDetailPage from '@/pages/TagDetailPage';
+import SummaryEditorPage from '@/pages/SummaryEditorPage';
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<TimelinePage />} />
       <Route path="/months/:monthKey" element={<MonthPage />} />
+      <Route path="/months/:monthKey/summary" element={<SummaryEditorPage />} />
       <Route path="/weeks/:weekKey" element={<WeekPage />} />
+      <Route path="/weeks/:weekKey/summary" element={<SummaryEditorPage />} />
       <Route path="/days/:date" element={<DayPage />} />
       <Route path="/knowledge" element={<KnowledgePage />} />
       <Route path="/knowledge/new" element={<KnowledgeEditorPage />} />
