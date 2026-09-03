@@ -12,9 +12,11 @@ interface EmptyStateProps {
 function EmptyState({ icon: Icon, title, description, action, className }: EmptyStateProps) {
   return (
     <div className={cn('flex flex-col items-center gap-3 py-16 text-center', className)}>
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface shadow-sm">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background text-muted-foreground">
-          <Icon className="h-5 w-5" />
+      <div className="rounded-[22px] border border-border bg-[#eeeeec] p-1.5">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface shadow-sm">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background text-muted-foreground">
+            <Icon className="h-5 w-5" />
+          </div>
         </div>
       </div>
       <div>
