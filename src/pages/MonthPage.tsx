@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowRight } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ArrowRight, CalendarRange } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import EmptyState from '@/components/EmptyState';
 import RichTextEditor from '@/components/RichTextEditor';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { getMonthlySummary, saveMonthlySummary } from '@/services/api/summaryApi';
@@ -55,12 +56,11 @@ function MonthPage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && weeks.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Belum ada knowledge di bulan ini</CardTitle>
-            <CardDescription>Catat knowledge harian dulu supaya minggu muncul di sini.</CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={CalendarRange}
+          title="Belum ada knowledge di bulan ini"
+          description="Catat knowledge harian dulu supaya minggu muncul di sini."
+        />
       )}
 
       <div className="flex flex-col gap-3">

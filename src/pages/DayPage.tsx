@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Plus } from 'lucide-react';
 import { addDays, format, parseISO } from 'date-fns';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
@@ -81,12 +81,12 @@ function DayPage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && items.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Belum ada knowledge di hari ini</CardTitle>
-            <CardDescription>Klik "Tambah" untuk mencatat knowledge pertama hari ini.</CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={FileText}
+          title="Belum ada knowledge di hari ini"
+          description="Klik &quot;Tambah&quot; untuk mencatat knowledge pertama hari ini."
+          action={{ label: 'Tambah Knowledge', onClick: () => setAddOpen(true) }}
+        />
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

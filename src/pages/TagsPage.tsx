@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Plus, Pencil, Tags as TagsIcon, Trash2 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import EmptyState from '@/components/EmptyState';
 import TagBadge from '@/components/TagBadge';
 import TagColorPicker from '@/components/TagColorPicker';
 import { listTags, createTag, updateTag, deleteTag } from '@/services/api/tagsApi';
@@ -121,12 +122,12 @@ function TagsPage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && tags.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Belum ada tag</CardTitle>
-            <CardDescription>Tambah tag pertama untuk mulai mengelompokkan knowledge.</CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={TagsIcon}
+          title="Belum ada tag"
+          description="Tambah tag pertama untuk mulai mengelompokkan knowledge."
+          action={{ label: 'Tambah Tag', onClick: () => setAddOpen(true) }}
+        />
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">

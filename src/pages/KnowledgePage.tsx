@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Search, SearchX } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listTags } from '@/services/api/tagsApi';
@@ -102,16 +102,15 @@ function KnowledgePage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && filteredItems.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Tidak ada knowledge ditemukan</CardTitle>
-            <CardDescription>
-              {search.trim()
-                ? 'Coba ubah kata kunci pencarian atau pilih tag lain.'
-                : 'Belum ada knowledge dengan tag ini.'}
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={SearchX}
+          title="Tidak ada knowledge ditemukan"
+          description={
+            search.trim()
+              ? 'Coba ubah kata kunci pencarian atau pilih tag lain.'
+              : 'Belum ada knowledge dengan tag ini.'
+          }
+        />
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

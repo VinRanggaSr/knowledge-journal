@@ -2,12 +2,15 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowRight, MousePointer2 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import EmptyState from '@/components/EmptyState';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { formatMonthLabel } from '@/lib/dateHelpers';
+import { useUiStore } from '@/store/uiStore';
 
 function TimelinePage() {
+  const openQuickAdd = useUiStore((s) => s.openQuickAdd);
   const today = format(new Date(), 'yyyy-MM-dd');
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['knowledge', {}],
@@ -69,14 +72,12 @@ function TimelinePage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && months.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Belum ada knowledge</CardTitle>
-            <CardDescription>
-              Mulai catat knowledge harian kamu lewat tombol "Tambah Knowledge".
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={BookOpen}
+          title="Belum ada knowledge"
+          description="Mulai catat knowledge harian kamu untuk melihat ringkasannya di sini."
+          action={{ label: 'Tambah Knowledge', onClick: openQuickAdd }}
+        />
       )}
 
       <div className="flex flex-col gap-3">

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ArrowLeft, TagIcon } from 'lucide-react';
 import TagBadge from '@/components/TagBadge';
+import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listTags } from '@/services/api/tagsApi';
@@ -55,12 +55,11 @@ function TagDetailPage() {
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && items.length === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Belum ada knowledge dengan tag ini</CardTitle>
-            <CardDescription>Tambahkan tag ini ke knowledge item untuk melihatnya di sini.</CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={TagIcon}
+          title="Belum ada knowledge dengan tag ini"
+          description="Tambahkan tag ini ke knowledge item untuk melihatnya di sini."
+        />
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
