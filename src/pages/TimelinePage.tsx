@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
@@ -7,10 +7,9 @@ import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { formatMonthLabel } from '@/lib/dateHelpers';
-import { useUiStore } from '@/store/uiStore';
 
 function TimelinePage() {
-  const openQuickAdd = useUiStore((s) => s.openQuickAdd);
+  const navigate = useNavigate();
   const today = format(new Date(), 'yyyy-MM-dd');
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['knowledge', {}],
@@ -85,7 +84,7 @@ function TimelinePage() {
           icon={BookOpen}
           title="Belum ada knowledge"
           description="Mulai catat knowledge harian kamu untuk melihat ringkasannya di sini."
-          action={{ label: 'Tambah Knowledge', onClick: openQuickAdd }}
+          action={{ label: 'Tambah Knowledge', onClick: () => navigate('/knowledge/new') }}
         />
       )}
 

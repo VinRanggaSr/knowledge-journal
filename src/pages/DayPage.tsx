@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, FileText, Plus } from 'lucide-react';
@@ -6,7 +5,6 @@ import { addDays, format, parseISO } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
-import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
 import { formatDateLabel } from '@/lib/dateHelpers';
@@ -25,9 +23,6 @@ function DayPage() {
     queryFn: () => listKnowledge({ date: activeDate }),
   });
   const { data: allTags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
-
-  const [addOpen, setAddOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
 
   const deleteMutation = useMutation({
     mutationFn: deleteKnowledgeItem,
@@ -72,7 +67,7 @@ function DayPage() {
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-        <Button onClick={() => setAddOpen(true)}>
+        <Button onClick={() => navigate(`/knowledge/new?date=${activeDate}`)}>
           <Plus className="h-4 w-4" />
           Tambah
         </Button>
@@ -85,7 +80,7 @@ function DayPage() {
           icon={FileText}
           title="Belum ada knowledge di hari ini"
           description="Klik &quot;Tambah&quot; untuk mencatat knowledge pertama hari ini."
-          action={{ label: 'Tambah Knowledge', onClick: () => setAddOpen(true) }}
+          action={{ label: 'Tambah Knowledge', onClick: () => navigate(`/knowledge/new?date=${activeDate}`) }}
         />
       )}
 
@@ -95,21 +90,11 @@ function DayPage() {
             key={item.id}
             item={item}
             tags={allTags}
-            onEdit={() => setEditingItem(item)}
+            onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
             onDelete={() => handleDelete(item)}
           />
         ))}
       </div>
-
-      <KnowledgeItemFormSheet open={addOpen} onOpenChange={setAddOpen} defaultDate={activeDate} />
-      {editingItem && (
-        <KnowledgeItemFormSheet
-          item={editingItem}
-          defaultDate={activeDate}
-          open={!!editingItem}
-          onOpenChange={(open) => !open && setEditingItem(null)}
-        />
-      )}
     </div>
   );
 }

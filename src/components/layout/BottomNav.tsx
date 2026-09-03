@@ -1,10 +1,9 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { BookText, Plus, Search, Tags as TagsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUiStore } from '@/store/uiStore';
 
 function BottomNav() {
-  const openQuickAdd = useUiStore((s) => s.openQuickAdd);
+  const navigate = useNavigate();
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-20 flex items-center justify-around border-t border-border bg-surface px-4 py-2 md:hidden">
@@ -37,7 +36,7 @@ function BottomNav() {
 
       <button
         type="button"
-        onClick={openQuickAdd}
+        onClick={() => navigate('/knowledge/new')}
         aria-label="Tambah knowledge"
         className="flex h-12 w-12 -translate-y-3 items-center justify-center rounded-full bg-foreground text-white shadow-md"
       >

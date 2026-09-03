@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import RichTextEditor from '@/components/RichTextEditor';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
-import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
 import { getWeeklySummary, saveWeeklySummary } from '@/services/api/summaryApi';
@@ -61,9 +60,6 @@ function WeekPage() {
       queryClient.invalidateQueries({ queryKey: ['weeklySummary', weekKey] });
     },
   });
-
-  const [addOpen, setAddOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
 
   const deleteMutation = useMutation({
     mutationFn: deleteKnowledgeItem,
@@ -173,7 +169,7 @@ function WeekPage() {
 
       <div className="flex items-center justify-between gap-2">
         <h2 className="font-semibold capitalize">{formatDateLabel(selectedDate)}</h2>
-        <Button size="sm" onClick={() => setAddOpen(true)}>
+        <Button size="sm" onClick={() => navigate(`/knowledge/new?date=${selectedDate}`)}>
           <Plus className="h-4 w-4" />
           Tambah
         </Button>
@@ -186,7 +182,7 @@ function WeekPage() {
           icon={FileText}
           title="Belum ada knowledge di hari ini"
           description="Klik &quot;Tambah&quot; untuk mencatat knowledge pertama hari ini."
-          action={{ label: 'Tambah Knowledge', onClick: () => setAddOpen(true) }}
+          action={{ label: 'Tambah Knowledge', onClick: () => navigate(`/knowledge/new?date=${selectedDate}`) }}
         />
       )}
 
@@ -196,21 +192,11 @@ function WeekPage() {
             key={item.id}
             item={item}
             tags={allTags}
-            onEdit={() => setEditingItem(item)}
+            onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
             onDelete={() => handleDelete(item)}
           />
         ))}
       </div>
-
-      <KnowledgeItemFormSheet open={addOpen} onOpenChange={setAddOpen} defaultDate={selectedDate} />
-      {editingItem && (
-        <KnowledgeItemFormSheet
-          item={editingItem}
-          defaultDate={selectedDate}
-          open={!!editingItem}
-          onOpenChange={(open) => !open && setEditingItem(null)}
-        />
-      )}
     </div>
   );
 }

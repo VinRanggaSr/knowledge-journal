@@ -1,22 +1,21 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, SearchX } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
-import KnowledgeItemFormSheet from '@/components/KnowledgeItemFormSheet';
 import { listTags } from '@/services/api/tagsApi';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { stripHtml } from '@/lib/dateHelpers';
-import { format } from 'date-fns';
 import type { KnowledgeItem } from '@/types';
 
 const ALL_TAB = 'all';
 
 function KnowledgePage() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const today = format(new Date(), 'yyyy-MM-dd');
 
   const { data: tags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
   const { data: items = [], isLoading } = useQuery({
@@ -26,7 +25,6 @@ function KnowledgePage() {
 
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
-  const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
 
   const deleteMutation = useMutation({
     mutationFn: deleteKnowledgeItem,
@@ -119,20 +117,11 @@ function KnowledgePage() {
             key={item.id}
             item={item}
             tags={tags}
-            onEdit={() => setEditingItem(item)}
+            onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
             onDelete={() => handleDelete(item)}
           />
         ))}
       </div>
-
-      {editingItem && (
-        <KnowledgeItemFormSheet
-          item={editingItem}
-          defaultDate={today}
-          open={!!editingItem}
-          onOpenChange={(open) => !open && setEditingItem(null)}
-        />
-      )}
     </div>
   );
 }
