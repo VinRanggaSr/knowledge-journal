@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { EditorContent } from '@tiptap/react';
 import { format } from 'date-fns';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import RichTextEditor from '@/components/RichTextEditor';
+import { useRichTextEditor, RichTextToolbar } from '@/components/RichTextEditor';
 import TagPicker from '@/components/TagPicker';
 import { listTags } from '@/services/api/tagsApi';
 import {
@@ -91,6 +92,13 @@ function KnowledgeEditorPage() {
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
+  const editor = useRichTextEditor({
+    value: descHtml,
+    onChange: setDescHtml,
+    placeholder: 'Tulis detail knowledge di sini...',
+    contentClassName: 'min-h-[50vh]',
+  });
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between gap-2">
@@ -138,12 +146,13 @@ function KnowledgeEditorPage() {
         <TagPicker allTags={allTags} selectedIds={tagIds} onChange={setTagIds} />
       </div>
 
-      <RichTextEditor
-        value={descHtml}
-        onChange={setDescHtml}
-        placeholder="Tulis detail knowledge di sini..."
-        contentClassName="min-h-[50vh]"
-      />
+      {editor && (
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+          <RichTextToolbar editor={editor} layout="row" className="md:hidden" />
+          <EditorContent editor={editor} className="md:flex-1" />
+          <RichTextToolbar editor={editor} layout="panel" className="hidden md:flex md:w-60 md:shrink-0" />
+        </div>
+      )}
     </div>
   );
 }
