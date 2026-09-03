@@ -205,24 +205,24 @@ export function RichTextToolbar({ editor, layout = 'row', className }: RichTextT
         <p className="text-xs font-medium text-muted-foreground">Text Editor</p>
         {fontPicker}
         <div className="w-full border-t border-dashed border-border" />
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {formatButtons.map(({ label, icon: Icon, active, onClick }) => (
             <button
               key={label}
               type="button"
               aria-label={label}
               onClick={onClick}
-              className="flex flex-col items-center gap-1.5 text-muted-foreground"
+              className="flex flex-col items-center gap-2 text-muted-foreground"
             >
               <span
                 className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-full bg-surface shadow-sm',
+                  'flex h-16 w-16 items-center justify-center rounded-full bg-surface shadow-sm',
                   active && 'text-foreground ring-2 ring-foreground/20',
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-6 w-6" />
               </span>
-              <span className="text-[10px] leading-none">{label.split(' ')[0]}</span>
+              <span className="text-xs leading-none">{label.split(' ')[0]}</span>
             </button>
           ))}
         </div>
