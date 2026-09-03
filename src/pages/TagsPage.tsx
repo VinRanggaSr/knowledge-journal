@@ -136,7 +136,7 @@ function TagsPage() {
             className="flex items-center justify-between border-dashed bg-transparent px-4 py-3"
           >
             <Link to={`/tags/${tag.id}`} className="flex flex-1 items-center">
-              <TagBadge tag={tag} />
+              <TagBadge tag={tag} className="bg-surface" />
             </Link>
             <div className="flex items-center gap-1">
               <button

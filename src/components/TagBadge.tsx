@@ -3,10 +3,15 @@ import type { Tag } from '@/types';
 
 interface TagBadgeProps {
   tag: Tag;
+  className?: string;
 }
 
-function TagBadge({ tag }: TagBadgeProps) {
-  return <Badge color={tag.color}>{tag.name}</Badge>;
+function TagBadge({ tag, className }: TagBadgeProps) {
+  return (
+    <Badge color={tag.color} className={className}>
+      {tag.name}
+    </Badge>
+  );
 }
 
 export default TagBadge;
