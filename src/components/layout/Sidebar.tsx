@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
-import { BookText, Search, Tags as TagsIcon, Plus } from 'lucide-react';
+import { BookText, LogOut, Search, Tags as TagsIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useUiStore } from '@/store/uiStore';
+import { STORAGE_KEY } from '@/components/PasswordGate';
 
 const navItems = [
   { to: '/', label: 'Timeline', icon: BookText, end: true },
@@ -12,6 +13,13 @@ const navItems = [
 
 function Sidebar() {
   const openQuickAdd = useUiStore((s) => s.openQuickAdd);
+
+  function handleLogout() {
+    if (window.confirm('Keluar dari Knowledge Journal?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      window.location.reload();
+    }
+  }
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-border md:bg-background md:p-6">
@@ -38,6 +46,15 @@ function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-auto flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-border"
+      >
+        <LogOut className="h-4 w-4" />
+        Keluar
+      </button>
     </aside>
   );
 }

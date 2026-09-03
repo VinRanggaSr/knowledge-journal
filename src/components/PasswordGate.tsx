@@ -2,7 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-const STORAGE_KEY = 'kj-unlocked';
+export const STORAGE_KEY = 'kj-unlocked';
 
 interface PasswordGateProps {
   children: ReactNode;
