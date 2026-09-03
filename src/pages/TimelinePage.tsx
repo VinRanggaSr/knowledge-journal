@@ -35,7 +35,7 @@ function TimelinePage() {
       </div>
 
       <Link to={`/days/${today}`}>
-        <Card className="flex items-center justify-between gap-4 border-dashed p-5 hover:bg-background/50">
+        <Card className="flex items-center justify-between gap-4 border-dashed p-5">
           <div className="flex flex-col items-start gap-3">
             <div>
               <p className="font-semibold">Catat knowledge hari ini</p>
@@ -43,7 +43,7 @@ function TimelinePage() {
                 Simpan hal baru yang kamu pelajari hari ini · {todayCount} tercatat
               </p>
             </div>
-            <span className="inline-flex items-center rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium">
+            <span className="inline-flex items-center rounded-xl border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:bg-background">
               Buka Hari Ini
             </span>
           </div>
