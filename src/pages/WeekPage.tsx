@@ -158,7 +158,7 @@ function WeekPage() {
               <span className="text-xs font-normal capitalize">
                 {format(date, 'EEE', { locale: idLocale })}
               </span>
-              <span className="text-2xl font-bold">{format(date, 'd')}</span>
+              <span className="text-2xl font-semibold">{format(date, 'd')}</span>
               <span
                 className={cn(
                   'mt-1 h-1.5 w-1.5 rounded-full',
