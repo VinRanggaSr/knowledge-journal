@@ -50,7 +50,7 @@ function MonthPage() {
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold capitalize">{formatMonthLabel(monthKey)}</h1>
-        <p className="text-sm text-muted-foreground">{items.length} knowledge item</p>
+        <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>
       </div>
 
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}

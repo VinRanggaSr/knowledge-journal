@@ -111,7 +111,7 @@ function TagsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Tags</h1>
-          <p className="text-sm text-muted-foreground">Kelola tag untuk mengelompokkan knowledge.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Kelola tag untuk mengelompokkan knowledge.</p>
         </div>
         <Button onClick={() => setAddOpen(true)}>
           <Plus className="h-4 w-4" />

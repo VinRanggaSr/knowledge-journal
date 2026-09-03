@@ -56,7 +56,7 @@ function KnowledgePage() {
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Knowledge</h1>
-        <p className="text-sm text-muted-foreground">Cari dan jelajahi semua knowledge item kamu.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Cari dan jelajahi semua knowledge item kamu.</p>
       </div>
 
       <div className="relative">

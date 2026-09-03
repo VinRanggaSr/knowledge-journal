@@ -110,7 +110,7 @@ function WeekPage() {
         </button>
         <div className="text-center">
           <h1 className="text-xl font-semibold">{formatWeekRangeLabel(weekDates)}</h1>
-          <p className="text-sm text-muted-foreground">{items.length} knowledge item</p>
+          <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>
         </div>
         <button
           type="button"

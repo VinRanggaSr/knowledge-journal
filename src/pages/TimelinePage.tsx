@@ -34,7 +34,7 @@ function TimelinePage() {
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Timeline</h1>
-        <p className="text-sm text-muted-foreground">Ringkasan knowledge journal kamu.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Ringkasan knowledge journal kamu.</p>
       </div>
 
       <Link to={`/days/${today}`}>

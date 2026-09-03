@@ -61,7 +61,7 @@ function DayPage() {
           </button>
           <div>
             <h1 className="text-xl font-semibold capitalize">{formatDateLabel(activeDate)}</h1>
-            <p className="text-sm text-muted-foreground">{items.length} knowledge item</p>
+            <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>
           </div>
           <button
             type="button"
