@@ -79,7 +79,7 @@ function TimelinePage() {
       </div>
 
       <Link to={`/weeks/${getWeekKey(today)}`}>
-        <Card className="relative flex items-center justify-between gap-4 overflow-hidden border-dashed p-5">
+        <Card className="relative flex flex-col-reverse items-start gap-4 overflow-hidden border-dashed p-5 sm:flex-row sm:items-center sm:justify-between">
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -87,7 +87,7 @@ function TimelinePage() {
               backgroundSize: '16px 16px',
             }}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-surface via-surface to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface via-surface to-transparent sm:bg-gradient-to-r" />
 
           <div className="relative flex flex-col items-start gap-3">
             <div>
@@ -101,7 +101,7 @@ function TimelinePage() {
             </span>
           </div>
 
-          <div className="relative hidden h-20 w-24 shrink-0 sm:block">
+          <div className="relative h-20 w-24 shrink-0">
             <div className="absolute inset-0 flex flex-col gap-1.5 rounded-xl border border-border bg-background p-2.5">
               <div className="flex gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent-orange" />
