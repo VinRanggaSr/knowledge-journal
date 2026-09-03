@@ -16,8 +16,12 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
 
   return (
     <Card className="flex flex-col gap-2 p-4">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="font-semibold">{item.title}</h3>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-1.5">
+          {itemTags.map((tag) => (
+            <TagBadge key={tag.id} tag={tag} />
+          ))}
+        </div>
         <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
@@ -37,14 +41,11 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
           </button>
         </div>
       </div>
+      <h3 className="line-clamp-2 font-semibold">{item.title}</h3>
       {item.descHtml && (
-        <p className="text-sm text-muted-foreground">{stripHtml(item.descHtml)}</p>
-      )}
-      {itemTags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {itemTags.map((tag) => (
-            <TagBadge key={tag.id} tag={tag} />
-          ))}
+        <div className="relative max-h-[4.5rem] overflow-hidden">
+          <p className="text-sm leading-6 text-muted-foreground">{stripHtml(item.descHtml, Infinity)}</p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
         </div>
       )}
     </Card>
