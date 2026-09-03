@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, FileText, Plus } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
@@ -25,19 +24,21 @@ function WeeklySummaryCard({ weekKey }: { weekKey: string }) {
   const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
 
   return (
-    <Card className="flex flex-col gap-3 p-5">
-      <h2 className="font-semibold">Ringkasan Mingguan</h2>
-
-      {summaryText ? (
-        <>
-          <div className="relative max-h-48 overflow-hidden">
-            <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
-          </div>
-          <Button asChild variant="outline" className="self-start">
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-semibold">Ringkasan Mingguan</h2>
+        {summaryText && (
+          <Button asChild variant="outline" size="sm">
             <Link to={`/weeks/${weekKey}/summary`}>Edit Ringkasan</Link>
           </Button>
-        </>
+        )}
+      </div>
+
+      {summaryText ? (
+        <div className="relative max-h-48 overflow-hidden">
+          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent" />
+        </div>
       ) : (
         <EmptyState
           icon={FileText}
@@ -48,7 +49,7 @@ function WeeklySummaryCard({ weekKey }: { weekKey: string }) {
           compact
         />
       )}
-    </Card>
+    </div>
   );
 }
 

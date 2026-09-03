@@ -62,19 +62,21 @@ function MonthlySummaryCard({ monthKey }: { monthKey: string }) {
   const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
 
   return (
-    <Card className="flex flex-col gap-3 p-5">
-      <h2 className="font-semibold">Ringkasan Bulanan</h2>
-
-      {summaryText ? (
-        <>
-          <div className="relative max-h-48 overflow-hidden">
-            <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
-          </div>
-          <Button asChild variant="outline" className="self-start">
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-semibold">Ringkasan Bulanan</h2>
+        {summaryText && (
+          <Button asChild variant="outline" size="sm">
             <Link to={`/months/${monthKey}/summary`}>Edit Ringkasan</Link>
           </Button>
-        </>
+        )}
+      </div>
+
+      {summaryText ? (
+        <div className="relative max-h-48 overflow-hidden">
+          <p className="text-sm leading-6 text-muted-foreground">{summaryText}</p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent" />
+        </div>
       ) : (
         <EmptyState
           icon={FileText}
@@ -85,7 +87,7 @@ function MonthlySummaryCard({ monthKey }: { monthKey: string }) {
           compact
         />
       )}
-    </Card>
+    </div>
   );
 }
 
@@ -113,6 +115,8 @@ function MonthPage() {
         <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>
       </div>
 
+      {items.length > 0 && <MonthlySummaryCard monthKey={monthKey} />}
+
       {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
       {!isLoading && weeks.length === 0 && (
@@ -128,8 +132,6 @@ function MonthPage() {
           <WeekCard key={weekKey} weekKey={weekKey} count={count} />
         ))}
       </div>
-
-      {items.length > 0 && <MonthlySummaryCard monthKey={monthKey} />}
     </div>
   );
 }
