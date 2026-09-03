@@ -38,8 +38,17 @@ function TimelinePage() {
       </div>
 
       <Link to={`/days/${today}`}>
-        <Card className="flex items-center justify-between gap-4 border-dashed p-5">
-          <div className="flex flex-col items-start gap-3">
+        <Card className="relative flex items-center justify-between gap-4 overflow-hidden border-dashed p-5">
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage: 'radial-gradient(circle, var(--color-border) 1.5px, transparent 1.5px)',
+              backgroundSize: '16px 16px',
+            }}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-surface via-surface to-transparent" />
+
+          <div className="relative flex flex-col items-start gap-3">
             <div>
               <p className="font-semibold">Catat knowledge hari ini</p>
               <p className="text-sm text-muted-foreground">
