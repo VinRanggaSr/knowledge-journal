@@ -2,14 +2,54 @@ import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
+import { ArrowRight, BookOpen, FileText, MousePointer2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
-import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge } from '@/services/api/knowledgeApi';
-import { listTags } from '@/services/api/tagsApi';
-import { formatMonthLabel, getWeekKey } from '@/lib/dateHelpers';
-import type { KnowledgeItem } from '@/types';
+import { getMonthlySummary } from '@/services/api/summaryApi';
+import { formatMonthLabel, getWeekKey, stripHtml } from '@/lib/dateHelpers';
+
+interface MonthCardProps {
+  monthKey: string;
+  count: number;
+}
+
+function MonthCard({ monthKey, count }: MonthCardProps) {
+  const { data: summary } = useQuery({
+    queryKey: ['monthlySummary', monthKey],
+    queryFn: () => getMonthlySummary(monthKey),
+  });
+
+  const summaryText = summary?.summaryHtml ? stripHtml(summary.summaryHtml, Infinity) : '';
+
+  return (
+    <Card className="flex flex-col gap-4 p-4">
+      <Link to={`/months/${monthKey}`} className="flex items-center justify-between">
+        <div>
+          <p className="font-semibold capitalize">{formatMonthLabel(monthKey)}</p>
+          <p className="text-sm text-muted-foreground">{count} knowledge item</p>
+        </div>
+        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+      </Link>
+
+      <div className="border-t border-dashed border-border" />
+
+      {summaryText ? (
+        <div className="relative max-h-24 overflow-hidden">
+          <p className="text-sm text-muted-foreground">{summaryText}</p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
+        </div>
+      ) : (
+        <EmptyState
+          icon={FileText}
+          title="Belum ada ringkasan bulanan"
+          description="Tulis ringkasan bulan ini di halaman detail bulan."
+          className="py-6"
+        />
+      )}
+    </Card>
+  );
+}
 
 function TimelinePage() {
   const navigate = useNavigate();
@@ -18,21 +58,16 @@ function TimelinePage() {
     queryKey: ['knowledge', {}],
     queryFn: () => listKnowledge({}),
   });
-  const { data: tags = [] } = useQuery({ queryKey: ['tags'], queryFn: listTags });
 
   const months = useMemo(() => {
-    const map = new Map<string, { count: number; recent: KnowledgeItem[] }>();
-    const sorted = [...items].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-    sorted.forEach((item) => {
+    const map = new Map<string, number>();
+    items.forEach((item) => {
       const monthKey = item.date.slice(0, 7);
-      const entry = map.get(monthKey) ?? { count: 0, recent: [] };
-      entry.count += 1;
-      if (entry.recent.length < 6) entry.recent.push(item);
-      map.set(monthKey, entry);
+      map.set(monthKey, (map.get(monthKey) ?? 0) + 1);
     });
     return Array.from(map.entries())
       .sort((a, b) => (a[0] < b[0] ? 1 : -1))
-      .map(([monthKey, { count, recent }]) => ({ monthKey, count, recent }));
+      .map(([monthKey, count]) => ({ monthKey, count }));
   }, [items]);
 
   const todayCount = items.filter((i) => i.date === today).length;
@@ -97,26 +132,8 @@ function TimelinePage() {
       )}
 
       <div className="flex flex-col gap-3">
-        {months.map(({ monthKey, count, recent }) => (
-          <Card key={monthKey} className="flex flex-col gap-4 p-4">
-            <Link to={`/months/${monthKey}`} className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold capitalize">{formatMonthLabel(monthKey)}</p>
-                <p className="text-sm text-muted-foreground">{count} knowledge item</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            </Link>
-
-            <div className="border-t border-dashed border-border" />
-
-            <div className="flex gap-3 overflow-x-auto pb-1">
-              {recent.map((item) => (
-                <Link key={item.id} to={`/knowledge/${item.id}/edit`} state={{ item }} className="w-64 shrink-0">
-                  <KnowledgeItemCard item={item} tags={tags} />
-                </Link>
-              ))}
-            </div>
-          </Card>
+        {months.map(({ monthKey, count }) => (
+          <MonthCard key={monthKey} monthKey={monthKey} count={count} />
         ))}
       </div>
     </div>
