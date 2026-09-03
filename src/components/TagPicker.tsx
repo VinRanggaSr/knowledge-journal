@@ -38,7 +38,7 @@ function TagPicker({ allTags, selectedIds, onChange }: TagPickerProps) {
         ))}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button type="button" variant="outline" size="sm">
+            <Button type="button" variant="outline">
               <TagIcon className="h-3.5 w-3.5" />
               Pilih Tag
             </Button>
