@@ -30,7 +30,7 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete }: KnowledgeItemCardPr
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface to-transparent" />
         </div>
       )}
-      <div className="mt-1 flex items-center justify-center gap-2">
+      <div className="mt-auto flex items-center justify-center gap-2 pt-1">
         <button
           type="button"
           onClick={onEdit}
