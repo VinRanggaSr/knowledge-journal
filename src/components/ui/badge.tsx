@@ -4,18 +4,18 @@ import type { VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium gap-1',
+  'inline-flex items-center rounded-full bg-background px-2.5 py-0.5 text-xs font-medium text-foreground gap-1',
   {
     variants: {
       color: {
-        neutral: 'bg-background text-muted-foreground',
-        orange: 'bg-background text-tag-orange-text',
-        violet: 'bg-background text-tag-violet-text',
-        teal: 'bg-background text-tag-teal-text',
-        blue: 'bg-background text-tag-blue-text',
-        pink: 'bg-background text-tag-pink-text',
-        green: 'bg-background text-tag-green-text',
-        yellow: 'bg-background text-tag-yellow-text',
+        neutral: '',
+        orange: '',
+        violet: '',
+        teal: '',
+        blue: '',
+        pink: '',
+        green: '',
+        yellow: '',
       },
     },
     defaultVariants: {
@@ -26,6 +26,17 @@ const badgeVariants = cva(
 
 export type TagColor = NonNullable<VariantProps<typeof badgeVariants>['color']>;
 
+const dotColorClasses: Record<TagColor, string> = {
+  neutral: 'bg-muted-foreground',
+  orange: 'bg-tag-orange-text',
+  violet: 'bg-tag-violet-text',
+  teal: 'bg-tag-teal-text',
+  blue: 'bg-tag-blue-text',
+  pink: 'bg-tag-pink-text',
+  green: 'bg-tag-green-text',
+  yellow: 'bg-tag-yellow-text',
+};
+
 interface BadgeProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'color'>,
     VariantProps<typeof badgeVariants> {}
@@ -33,7 +44,7 @@ interface BadgeProps
 function Badge({ className, color, children, ...props }: BadgeProps) {
   return (
     <span className={cn(badgeVariants({ color, className }))} {...props}>
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+      <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', dotColorClasses[color ?? 'neutral'])} />
       {children}
     </span>
   );
