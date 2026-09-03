@@ -98,7 +98,7 @@ function TimelinePage() {
 
       <div className="flex flex-col gap-3">
         {months.map(({ monthKey, count, recent }) => (
-          <Card key={monthKey} className="flex flex-col gap-3 p-4">
+          <Card key={monthKey} className="flex flex-col gap-4 p-4">
             <Link to={`/months/${monthKey}`} className="flex items-center justify-between">
               <div>
                 <p className="font-semibold capitalize">{formatMonthLabel(monthKey)}</p>
