@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, FileText, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Pencil, Plus } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -25,12 +25,16 @@ function WeeklySummaryCard({ weekKey }: { weekKey: string }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
         <h2 className="font-semibold">Ringkasan Mingguan</h2>
         {summaryText && (
-          <Button asChild variant="outline" size="sm">
-            <Link to={`/weeks/${weekKey}/summary`}>Edit Ringkasan</Link>
-          </Button>
+          <Link
+            to={`/weeks/${weekKey}/summary`}
+            aria-label="Edit ringkasan"
+            className="rounded-full p-1.5 text-muted-foreground hover:bg-background"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Link>
         )}
       </div>
 

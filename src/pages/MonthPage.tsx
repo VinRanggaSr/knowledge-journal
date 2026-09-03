@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, CalendarRange, FileText } from 'lucide-react';
+import { ArrowRight, CalendarRange, FileText, Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import { listKnowledge } from '@/services/api/knowledgeApi';
 import { getMonthlySummary, getWeeklySummary } from '@/services/api/summaryApi';
@@ -63,12 +62,16 @@ function MonthlySummaryCard({ monthKey }: { monthKey: string }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
         <h2 className="font-semibold">Ringkasan Bulanan</h2>
         {summaryText && (
-          <Button asChild variant="outline" size="sm">
-            <Link to={`/months/${monthKey}/summary`}>Edit Ringkasan</Link>
-          </Button>
+          <Link
+            to={`/months/${monthKey}/summary`}
+            aria-label="Edit ringkasan"
+            className="rounded-full p-1.5 text-muted-foreground hover:bg-background"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Link>
         )}
       </div>
 
