@@ -6,7 +6,7 @@ import { ArrowRight, BookOpen, MousePointer2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
 import { listKnowledge } from '@/services/api/knowledgeApi';
-import { formatMonthLabel } from '@/lib/dateHelpers';
+import { formatMonthLabel, getWeekKey } from '@/lib/dateHelpers';
 
 function TimelinePage() {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ function TimelinePage() {
         <p className="mt-1 text-sm text-muted-foreground">Ringkasan knowledge journal kamu.</p>
       </div>
 
-      <Link to={`/days/${today}`}>
+      <Link to={`/weeks/${getWeekKey(today)}`}>
         <Card className="relative flex items-center justify-between gap-4 overflow-hidden border-dashed p-5">
           <div
             className="pointer-events-none absolute inset-0"
