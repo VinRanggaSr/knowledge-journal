@@ -164,7 +164,9 @@ function WeekPage() {
                 <span
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors',
-                    isSelected ? 'bg-accent-orange text-white' : 'text-foreground hover:bg-background',
+                    isSelected
+                      ? 'border border-accent-orange bg-surface text-accent-orange'
+                      : 'text-foreground hover:bg-background',
                   )}
                 >
                   {format(date, 'd')}
