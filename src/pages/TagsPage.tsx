@@ -72,7 +72,10 @@ function TagFormSheet({
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">Preview</label>
-            <TagBadge tag={{ id: 'preview', name: name || 'Nama Tag', color, createdAt: '' }} />
+            <TagBadge
+              tag={{ id: 'preview', name: name || 'Nama Tag', color, createdAt: '' }}
+              className="self-start"
+            />
           </div>
           <Button type="submit" disabled={isSaving || !name.trim()}>
             {isSaving ? 'Menyimpan...' : 'Simpan'}
