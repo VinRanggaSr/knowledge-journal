@@ -116,27 +116,29 @@ function WeekPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-center gap-2">
-        <button
-          type="button"
-          aria-label="Minggu sebelumnya"
-          onClick={() => goToWeek(-1)}
-          className="rounded-full p-2 text-muted-foreground hover:bg-background"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <div className="text-center">
+      <div className="flex items-center justify-between gap-2">
+        <div>
           <h1 className="text-xl font-semibold">{formatWeekRangeLabel(weekDates)}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>
         </div>
-        <button
-          type="button"
-          aria-label="Minggu berikutnya"
-          onClick={() => goToWeek(1)}
-          className="rounded-full p-2 text-muted-foreground hover:bg-background"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label="Minggu sebelumnya"
+            onClick={() => goToWeek(-1)}
+            className="rounded-full p-2 text-muted-foreground hover:bg-background"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            aria-label="Minggu berikutnya"
+            onClick={() => goToWeek(1)}
+            className="rounded-full p-2 text-muted-foreground hover:bg-background"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {items.length > 0 && <WeeklySummaryCard weekKey={weekKey} />}
