@@ -33,9 +33,13 @@ function TagPicker({ allTags, selectedIds, onChange }: TagPickerProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        {selectedTags.map((tag) => (
-          <TagBadge key={tag.id} tag={tag} />
-        ))}
+        {selectedTags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 rounded-full border border-border bg-surface p-1.5">
+            {selectedTags.map((tag) => (
+              <TagBadge key={tag.id} tag={tag} className="bg-[#eeeeec]" />
+            ))}
+          </div>
+        )}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button type="button" variant="outline">
