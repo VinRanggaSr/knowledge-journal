@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, CalendarRange, FileText, Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import EmptyState from '@/components/EmptyState';
 import ClampedText from '@/components/ClampedText';
 import { listKnowledge } from '@/services/api/knowledgeApi';
@@ -108,6 +109,8 @@ function MonthPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      <Breadcrumbs items={[{ label: 'Timeline', to: '/' }, { label: formatMonthLabel(monthKey) }]} />
+
       <div>
         <h1 className="text-2xl font-semibold capitalize">{formatMonthLabel(monthKey)}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{items.length} knowledge item</p>

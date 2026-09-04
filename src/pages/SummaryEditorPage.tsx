@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { EditorContent } from '@tiptap/react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { useRichTextEditor, RichTextToolbar } from '@/components/RichTextEditor';
 import {
   getMonthlySummary,
@@ -79,6 +80,22 @@ function SummaryEditorPage() {
 
   return (
     <div className="flex flex-col gap-5">
+      <Breadcrumbs
+        items={
+          isMonth
+            ? [
+                { label: 'Timeline', to: '/' },
+                { label: formatMonthLabel(key), to: `/months/${key}` },
+                { label: 'Ringkasan Bulanan' },
+              ]
+            : [
+                { label: 'Timeline', to: '/' },
+                { label: formatWeekRangeLabel(weekDates), to: `/weeks/${key}` },
+                { label: 'Ringkasan Mingguan' },
+              ]
+        }
+      />
+
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"

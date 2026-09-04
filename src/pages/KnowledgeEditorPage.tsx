@@ -5,6 +5,7 @@ import { EditorContent } from '@tiptap/react';
 import { format } from 'date-fns';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { useRichTextEditor, RichTextToolbar } from '@/components/RichTextEditor';
 import TagPicker from '@/components/TagPicker';
 import { listTags } from '@/services/api/tagsApi';
@@ -101,6 +102,13 @@ function KnowledgeEditorPage() {
 
   return (
     <div className="flex flex-col gap-5">
+      <Breadcrumbs
+        items={[
+          { label: 'Knowledge', to: '/knowledge' },
+          { label: isEditing ? 'Edit Knowledge' : 'Tambah Knowledge' },
+        ]}
+      />
+
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"

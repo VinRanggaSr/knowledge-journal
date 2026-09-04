@@ -1,7 +1,8 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, TagIcon } from 'lucide-react';
+import { TagIcon } from 'lucide-react';
 import TagBadge from '@/components/TagBadge';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import EmptyState from '@/components/EmptyState';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listTags } from '@/services/api/tagsApi';
@@ -37,10 +38,7 @@ function TagDetailPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to="/tags" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Tags
-      </Link>
+      <Breadcrumbs items={[{ label: 'Tags', to: '/tags' }, { label: tag?.name ?? 'Tag' }]} />
 
       <div className="flex items-center gap-3">
         {tag ? <TagBadge tag={tag} /> : <h1 className="text-2xl font-semibold">Tag</h1>}

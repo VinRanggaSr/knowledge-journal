@@ -4,13 +4,21 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, FileText, Pencil } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import EmptyState from '@/components/EmptyState';
 import ClampedText from '@/components/ClampedText';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
 import { getWeeklySummary } from '@/services/api/summaryApi';
-import { getWeekDates, getWeekKey, formatWeekRangeLabel, stripHtml } from '@/lib/dateHelpers';
+import {
+  getWeekDates,
+  getWeekKey,
+  getMonthKey,
+  formatWeekRangeLabel,
+  formatMonthLabel,
+  stripHtml,
+} from '@/lib/dateHelpers';
 import { cn } from '@/lib/utils';
 import type { KnowledgeItem } from '@/types';
 
@@ -107,8 +115,18 @@ function WeekPage() {
     navigate(`/weeks/${getWeekKey(addWeeks(base, offset))}`);
   }
 
+  const monthKey = weekDates[0] ? getMonthKey(weekDates[0]) : '';
+
   return (
     <div className="flex flex-col gap-4">
+      <Breadcrumbs
+        items={[
+          { label: 'Timeline', to: '/' },
+          { label: formatMonthLabel(monthKey), to: `/months/${monthKey}` },
+          { label: formatWeekRangeLabel(weekDates) },
+        ]}
+      />
+
       <div className="flex items-center justify-between gap-2">
         <div>
           <h1 className="text-xl font-semibold">{formatWeekRangeLabel(weekDates)}</h1>
