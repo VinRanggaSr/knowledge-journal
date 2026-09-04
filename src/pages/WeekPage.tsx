@@ -156,17 +156,15 @@ function WeekPage() {
                   key={dateStr}
                   type="button"
                   onClick={() => setSelectedDate(dateStr)}
-                  className="flex flex-1 flex-col items-center gap-1.5 py-1"
+                  className={cn(
+                    'flex flex-1 flex-col items-center gap-1.5 rounded-2xl py-2 transition-colors',
+                    isSelected ? 'border border-border bg-surface' : 'hover:bg-background',
+                  )}
                 >
                   <span className="text-sm font-medium text-muted-foreground capitalize">
                     {format(date, 'EEE', { locale: idLocale })}
                   </span>
-                  <span
-                    className={cn(
-                      'flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground transition-colors',
-                      isSelected ? 'border border-border bg-surface' : 'hover:bg-background',
-                    )}
-                  >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground">
                     {format(date, 'd')}
                   </span>
                   <span
