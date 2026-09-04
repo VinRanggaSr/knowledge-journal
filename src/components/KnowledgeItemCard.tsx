@@ -9,18 +9,25 @@ import type { KnowledgeItem, Tag } from '@/types';
 interface KnowledgeItemCardProps {
   item: KnowledgeItem;
   tags: Tag[];
+  onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   className?: string;
 }
 
-function KnowledgeItemCard({ item, tags, onEdit, onDelete, className }: KnowledgeItemCardProps) {
+function KnowledgeItemCard({ item, tags, onView, onEdit, onDelete, className }: KnowledgeItemCardProps) {
   const itemTags = tags.filter((t) => item.tagIds.includes(t.id));
   const showActions = onEdit || onDelete;
 
   return (
     <div className={cn('h-full rounded-[30px] border border-border bg-[#eeeeec] p-1.5', className)}>
-      <Card className="flex h-full flex-col items-center gap-2 rounded-3xl border-0 p-4 text-center">
+      <Card
+        onClick={onView}
+        className={cn(
+          'flex h-full flex-col items-center gap-2 rounded-3xl border-0 p-4 text-center',
+          onView && 'cursor-pointer',
+        )}
+      >
         {itemTags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1.5">
             {itemTags.map((tag) => (
@@ -37,7 +44,10 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete, className }: Knowledg
             {onEdit && (
               <button
                 type="button"
-                onClick={onEdit}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
                 className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -47,7 +57,10 @@ function KnowledgeItemCard({ item, tags, onEdit, onDelete, className }: Knowledg
             {onDelete && (
               <button
                 type="button"
-                onClick={onDelete}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
                 className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
               >
                 <Trash2 className="h-3.5 w-3.5" />

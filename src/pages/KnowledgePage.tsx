@@ -117,6 +117,7 @@ function KnowledgePage() {
             key={item.id}
             item={item}
             tags={tags}
+            onView={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
             onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
             onDelete={() => handleDelete(item)}
           />

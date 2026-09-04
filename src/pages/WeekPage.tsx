@@ -211,6 +211,7 @@ function WeekPage() {
                   key={item.id}
                   item={item}
                   tags={allTags}
+                  onView={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
                   onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
                   onDelete={() => handleDelete(item)}
                 />
