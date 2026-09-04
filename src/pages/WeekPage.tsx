@@ -136,9 +136,8 @@ function WeekPage() {
 
       {items.length > 0 && <WeeklySummaryCard weekKey={weekKey} />}
 
-      <div className="flex flex-col gap-4 rounded-[30px] border border-border bg-[#eeeeec] p-4">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-semibold">Tanggal di Minggu ini</h2>
+      <div className="flex flex-col gap-2 rounded-[30px] border border-border bg-[#eeeeec] p-2">
+        <div className="flex flex-col gap-1">
           <div className="flex items-start justify-between gap-1">
             {weekDates.map((date) => {
               const dateStr = format(date, 'yyyy-MM-dd');
