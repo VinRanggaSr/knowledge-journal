@@ -30,9 +30,8 @@ function SheetContent({ className, children, title, description, ...props }: She
       <SheetOverlay />
       <DialogPrimitive.Content
         className={cn(
-          'fixed z-50 flex flex-col gap-4 bg-surface p-6 shadow-lg',
-          'inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl',
-          'md:inset-y-0 md:right-0 md:left-auto md:h-full md:max-h-full md:w-full md:max-w-md md:rounded-none md:rounded-l-2xl',
+          'fixed z-50 flex max-h-[85vh] w-[calc(100%-2rem)] max-w-md flex-col gap-4 rounded-2xl bg-surface p-6 shadow-lg',
+          'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
           className,
         )}
         {...props}

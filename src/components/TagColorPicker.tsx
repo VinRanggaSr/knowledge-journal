@@ -20,7 +20,7 @@ interface TagColorPickerProps {
 
 function TagColorPicker({ value, onChange }: TagColorPickerProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 px-1">
       {COLORS.map((color) => (
         <button
           key={color}
