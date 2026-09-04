@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, FileText, Pencil, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Pencil } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
-import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
 import ClampedText from '@/components/ClampedText';
 import KnowledgeItemCard from '@/components/KnowledgeItemCard';
 import { listKnowledge, deleteKnowledgeItem } from '@/services/api/knowledgeApi';
 import { listTags } from '@/services/api/tagsApi';
 import { getWeeklySummary } from '@/services/api/summaryApi';
-import { getWeekDates, getWeekKey, formatWeekRangeLabel, formatDateLabel, stripHtml } from '@/lib/dateHelpers';
+import { getWeekDates, getWeekKey, formatWeekRangeLabel, stripHtml } from '@/lib/dateHelpers';
 import { cn } from '@/lib/utils';
 import type { KnowledgeItem } from '@/types';
 
@@ -143,48 +142,40 @@ function WeekPage() {
 
       {items.length > 0 && <WeeklySummaryCard weekKey={weekKey} />}
 
-      <div className="flex flex-col gap-2">
-        <h2 className="font-semibold">Tanggal di Minggu ini</h2>
-        <div className="flex items-start justify-between gap-1">
-          {weekDates.map((date) => {
-            const dateStr = format(date, 'yyyy-MM-dd');
-            const isSelected = dateStr === selectedDate;
-            const count = countByDate.get(dateStr) ?? 0;
-
-            return (
-              <button
-                key={dateStr}
-                type="button"
-                onClick={() => setSelectedDate(dateStr)}
-                className="flex flex-1 flex-col items-center gap-1.5 py-1"
-              >
-                <span className="text-sm font-medium text-muted-foreground capitalize">
-                  {format(date, 'EEE', { locale: idLocale })}
-                </span>
-                <span
-                  className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground transition-colors',
-                    isSelected ? 'border border-border bg-surface' : 'hover:bg-background',
-                  )}
-                >
-                  {format(date, 'd')}
-                </span>
-                <span
-                  className={cn('h-1.5 w-1.5 rounded-full', count > 0 ? 'bg-muted-foreground' : 'bg-transparent')}
-                />
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       <div className="flex flex-col gap-4 rounded-[30px] border border-border bg-[#eeeeec] p-4">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="font-semibold capitalize">{formatDateLabel(selectedDate)}</h2>
-          <Button size="sm" onClick={() => navigate(`/knowledge/new?date=${selectedDate}`)}>
-            <Plus className="h-4 w-4" />
-            Tambah
-          </Button>
+        <div className="flex flex-col gap-2">
+          <h2 className="font-semibold">Tanggal di Minggu ini</h2>
+          <div className="flex items-start justify-between gap-1">
+            {weekDates.map((date) => {
+              const dateStr = format(date, 'yyyy-MM-dd');
+              const isSelected = dateStr === selectedDate;
+              const count = countByDate.get(dateStr) ?? 0;
+
+              return (
+                <button
+                  key={dateStr}
+                  type="button"
+                  onClick={() => setSelectedDate(dateStr)}
+                  className="flex flex-1 flex-col items-center gap-1.5 py-1"
+                >
+                  <span className="text-sm font-medium text-muted-foreground capitalize">
+                    {format(date, 'EEE', { locale: idLocale })}
+                  </span>
+                  <span
+                    className={cn(
+                      'flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground transition-colors',
+                      isSelected ? 'border border-border bg-surface' : 'hover:bg-background',
+                    )}
+                  >
+                    {format(date, 'd')}
+                  </span>
+                  <span
+                    className={cn('h-1.5 w-1.5 rounded-full', count > 0 ? 'bg-muted-foreground' : 'bg-transparent')}
+                  />
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="rounded-3xl bg-surface p-4">
