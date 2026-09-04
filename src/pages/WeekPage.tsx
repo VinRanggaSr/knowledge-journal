@@ -178,35 +178,41 @@ function WeekPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-semibold capitalize">{formatDateLabel(selectedDate)}</h2>
-        <Button size="sm" onClick={() => navigate(`/knowledge/new?date=${selectedDate}`)}>
-          <Plus className="h-4 w-4" />
-          Tambah
-        </Button>
-      </div>
+      <div className="flex flex-col gap-4 rounded-[30px] border border-border bg-[#eeeeec] p-4">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-semibold capitalize">{formatDateLabel(selectedDate)}</h2>
+          <Button size="sm" onClick={() => navigate(`/knowledge/new?date=${selectedDate}`)}>
+            <Plus className="h-4 w-4" />
+            Tambah
+          </Button>
+        </div>
 
-      {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
+        <div className="rounded-3xl bg-surface p-4">
+          {isLoading && <p className="text-sm text-muted-foreground">Memuat...</p>}
 
-      {!isLoading && dayItems.length === 0 && (
-        <EmptyState
-          icon={FileText}
-          title="Belum ada knowledge di hari ini"
-          description="Klik &quot;Tambah&quot; untuk mencatat knowledge pertama hari ini."
-          action={{ label: 'Tambah Knowledge', onClick: () => navigate(`/knowledge/new?date=${selectedDate}`) }}
-        />
-      )}
+          {!isLoading && dayItems.length === 0 && (
+            <EmptyState
+              icon={FileText}
+              title="Belum ada knowledge di hari ini"
+              description="Klik &quot;Tambah&quot; untuk mencatat knowledge pertama hari ini."
+              action={{ label: 'Tambah Knowledge', onClick: () => navigate(`/knowledge/new?date=${selectedDate}`) }}
+            />
+          )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {dayItems.map((item) => (
-          <KnowledgeItemCard
-            key={item.id}
-            item={item}
-            tags={allTags}
-            onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
-            onDelete={() => handleDelete(item)}
-          />
-        ))}
+          {dayItems.length > 0 && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {dayItems.map((item) => (
+                <KnowledgeItemCard
+                  key={item.id}
+                  item={item}
+                  tags={allTags}
+                  onEdit={() => navigate(`/knowledge/${item.id}/edit`, { state: { item } })}
+                  onDelete={() => handleDelete(item)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
