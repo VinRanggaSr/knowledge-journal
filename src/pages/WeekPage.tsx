@@ -143,37 +143,39 @@ function WeekPage() {
 
       {items.length > 0 && <WeeklySummaryCard weekKey={weekKey} />}
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {weekDates.map((date) => {
-          const dateStr = format(date, 'yyyy-MM-dd');
-          const isSelected = dateStr === selectedDate;
-          const count = countByDate.get(dateStr) ?? 0;
+      <div className="flex flex-col gap-2">
+        <h2 className="font-semibold">Tanggal di Minggu ini</h2>
+        <div className="flex items-start justify-between gap-1">
+          {weekDates.map((date) => {
+            const dateStr = format(date, 'yyyy-MM-dd');
+            const isSelected = dateStr === selectedDate;
+            const count = countByDate.get(dateStr) ?? 0;
 
-          return (
-            <button
-              key={dateStr}
-              type="button"
-              onClick={() => setSelectedDate(dateStr)}
-              className={cn(
-                'flex min-w-[64px] flex-1 flex-col items-center gap-1 rounded-2xl border px-3 py-3 text-center transition-colors',
-                isSelected
-                  ? 'border-accent-orange bg-accent-orange/10 text-accent-orange'
-                  : 'border-border bg-surface text-muted-foreground hover:bg-background',
-              )}
-            >
-              <span className="text-xs font-normal capitalize">
-                {format(date, 'EEE', { locale: idLocale })}
-              </span>
-              <span className="text-2xl font-semibold">{format(date, 'd')}</span>
-              <span
-                className={cn(
-                  'mt-1 h-1.5 w-1.5 rounded-full',
-                  count > 0 ? 'bg-current' : 'bg-transparent',
-                )}
-              />
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={dateStr}
+                type="button"
+                onClick={() => setSelectedDate(dateStr)}
+                className="flex flex-1 flex-col items-center gap-1.5 py-1"
+              >
+                <span className="text-xs font-medium text-muted-foreground capitalize">
+                  {format(date, 'EEE', { locale: idLocale })}
+                </span>
+                <span
+                  className={cn(
+                    'flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors',
+                    isSelected ? 'bg-accent-orange text-white' : 'text-foreground hover:bg-background',
+                  )}
+                >
+                  {format(date, 'd')}
+                </span>
+                <span
+                  className={cn('h-1.5 w-1.5 rounded-full', count > 0 ? 'bg-muted-foreground' : 'bg-transparent')}
+                />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex items-center justify-between gap-2">
