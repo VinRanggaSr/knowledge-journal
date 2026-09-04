@@ -94,12 +94,6 @@ function WeekPage() {
     }
   }
 
-  const countByDate = useMemo(() => {
-    const map = new Map<string, number>();
-    items.forEach((item) => map.set(item.date, (map.get(item.date) ?? 0) + 1));
-    return map;
-  }, [items]);
-
   const dayItems = useMemo(
     () =>
       items
@@ -149,7 +143,6 @@ function WeekPage() {
             {weekDates.map((date) => {
               const dateStr = format(date, 'yyyy-MM-dd');
               const isSelected = dateStr === selectedDate;
-              const count = countByDate.get(dateStr) ?? 0;
 
               return (
                 <button
@@ -157,7 +150,7 @@ function WeekPage() {
                   type="button"
                   onClick={() => setSelectedDate(dateStr)}
                   className={cn(
-                    'flex flex-1 flex-col items-center gap-1.5 rounded-2xl py-2 transition-colors',
+                    'flex flex-1 flex-col items-center gap-0.5 rounded-2xl py-2 transition-colors',
                     isSelected ? 'border border-border bg-surface' : 'hover:bg-background',
                   )}
                 >
@@ -167,9 +160,6 @@ function WeekPage() {
                   <span className="flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground">
                     {format(date, 'd')}
                   </span>
-                  <span
-                    className={cn('h-1.5 w-1.5 rounded-full', count > 0 ? 'bg-muted-foreground' : 'bg-transparent')}
-                  />
                 </button>
               );
             })}
