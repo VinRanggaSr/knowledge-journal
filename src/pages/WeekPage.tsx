@@ -157,7 +157,7 @@ function WeekPage() {
                   <span className="text-sm font-medium text-muted-foreground capitalize">
                     {format(date, 'EEE', { locale: idLocale })}
                   </span>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-foreground">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full text-2xl font-semibold text-foreground">
                     {format(date, 'd')}
                   </span>
                 </button>
