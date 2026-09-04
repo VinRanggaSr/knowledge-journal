@@ -13,6 +13,16 @@ const SWATCH_CLASS: Record<TagColor, string> = {
   yellow: 'bg-tag-yellow-text',
 };
 
+const RING_CLASS: Record<TagColor, string> = {
+  orange: 'ring-tag-orange-text',
+  violet: 'ring-tag-violet-text',
+  teal: 'ring-tag-teal-text',
+  blue: 'ring-tag-blue-text',
+  pink: 'ring-tag-pink-text',
+  green: 'ring-tag-green-text',
+  yellow: 'ring-tag-yellow-text',
+};
+
 interface TagColorPickerProps {
   value: TagColor;
   onChange: (color: TagColor) => void;
@@ -30,7 +40,7 @@ function TagColorPicker({ value, onChange }: TagColorPickerProps) {
           className={cn(
             'h-8 w-8 rounded-full ring-offset-2 transition-transform',
             SWATCH_CLASS[color],
-            value === color ? 'ring-2 ring-foreground scale-105' : 'ring-0',
+            value === color ? cn('ring-2 scale-105', RING_CLASS[color]) : 'ring-0',
           )}
         />
       ))}
