@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, FileText, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Pencil, Plus } from 'lucide-react';
 import { addWeeks, format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -197,6 +197,15 @@ function WeekPage() {
 
           {dayItems.length > 0 && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <button
+                type="button"
+                onClick={() => navigate(`/knowledge/new?date=${selectedDate}`)}
+                className="flex h-full min-h-32 flex-col items-center justify-center gap-2 rounded-[30px] border border-dashed border-border text-muted-foreground transition-colors hover:bg-background"
+              >
+                <Plus className="h-5 w-5" />
+                <span className="text-sm font-medium">Tambah Knowledge</span>
+              </button>
+
               {dayItems.map((item) => (
                 <KnowledgeItemCard
                   key={item.id}
