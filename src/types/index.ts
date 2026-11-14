@@ -35,3 +35,33 @@ export interface MonthlySummary {
   summaryHtml: string;
   updatedAt: string;
 }
+
+export interface Goal {
+  id: string;
+  title: string;
+  createdAt: string;
+}
+
+export interface GoalItem {
+  id: string;
+  goalId: string;
+  text: string;
+  createdAt: string;
+}
+
+export interface GoalsData {
+  goals: Goal[];
+  items: GoalItem[];
+}
+
+export interface Action {
+  id: string;
+  title: string;
+  isDaily: boolean;
+  createdAt: string;
+}
+
+export interface ActionLog {
+  date: string; // YYYY-MM-DD
+  actionId: string;
+}

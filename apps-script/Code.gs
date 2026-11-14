@@ -4,6 +4,10 @@ const SHEET_NAMES = {
   TAGS: 'Tags',
   WEEKLY_SUMMARY: 'WeeklySummary',
   MONTHLY_SUMMARY: 'MonthlySummary',
+  GOALS: 'Goals',
+  GOAL_ITEMS: 'GoalItems',
+  ACTIONS: 'Actions',
+  ACTION_LOGS: 'ActionLogs',
 };
 
 const SHEET_HEADERS = {
@@ -11,6 +15,10 @@ const SHEET_HEADERS = {
   Tags: ['id', 'name', 'color', 'createdAt'],
   WeeklySummary: ['weekKey', 'summaryHtml', 'updatedAt'],
   MonthlySummary: ['monthKey', 'summaryHtml', 'updatedAt'],
+  Goals: ['id', 'title', 'createdAt'],
+  GoalItems: ['id', 'goalId', 'text', 'createdAt'],
+  Actions: ['id', 'title', 'isDaily', 'createdAt'],
+  ActionLogs: ['key', 'date', 'actionId'],
 };
 
 // ===== SETUP (jalankan SEKALI secara manual dari editor Apps Script) =====
@@ -43,8 +51,14 @@ function getSharedSecret_() {
 
 function getSheet_(name) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(name);
-  if (!sheet) throw new Error('Sheet not found: ' + name);
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    const headers = SHEET_HEADERS[name];
+    if (!headers) throw new Error('Sheet not found: ' + name);
+    sheet = ss.insertSheet(name);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+  }
   return sheet;
 }
 
@@ -288,6 +302,133 @@ function saveMonthlySummary_(payload) {
   return { monthKey: payload.monthKey, summaryHtml: payload.summaryHtml, updatedAt };
 }
 
+// ===== GOALS & ACTIONS =====
+function listGoals_() {
+  const goals = readSheetAsObjects_(SHEET_NAMES.GOALS).map((g) => ({
+    id: g.id,
+    title: g.title,
+    createdAt: g.createdAt,
+  }));
+  const items = readSheetAsObjects_(SHEET_NAMES.GOAL_ITEMS).map((i) => ({
+    id: i.id,
+    goalId: i.goalId,
+    text: i.text,
+    createdAt: i.createdAt,
+  }));
+  return { goals: goals, items: items };
+}
+
+function createGoal_(payload) {
+  const goal = { id: uuid_(), title: payload.title, createdAt: nowIso_() };
+  getSheet_(SHEET_NAMES.GOALS).appendRow([goal.id, goal.title, goal.createdAt]);
+  return goal;
+}
+
+function updateGoal_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.GOALS, payload.id);
+  if (rowNumber === -1) throw new Error('Goal not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.GOALS).getRange(rowNumber, 2).setValue(payload.title);
+  return { id: payload.id, title: payload.title };
+}
+
+function deleteGoal_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.GOALS, payload.id);
+  if (rowNumber === -1) throw new Error('Goal not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.GOALS).deleteRow(rowNumber);
+  deleteRowsWhere_(SHEET_NAMES.GOAL_ITEMS, 'goalId', payload.id);
+  return { id: payload.id };
+}
+
+function createGoalItem_(payload) {
+  const item = {
+    id: uuid_(),
+    goalId: payload.goalId,
+    text: payload.text,
+    createdAt: nowIso_(),
+  };
+  getSheet_(SHEET_NAMES.GOAL_ITEMS).appendRow([item.id, item.goalId, item.text, item.createdAt]);
+  return item;
+}
+
+function updateGoalItem_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.GOAL_ITEMS, payload.id);
+  if (rowNumber === -1) throw new Error('Goal item not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.GOAL_ITEMS).getRange(rowNumber, 3).setValue(payload.text);
+  return { id: payload.id, text: payload.text };
+}
+
+function deleteGoalItem_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.GOAL_ITEMS, payload.id);
+  if (rowNumber === -1) throw new Error('Goal item not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.GOAL_ITEMS).deleteRow(rowNumber);
+  return { id: payload.id };
+}
+
+function deleteRowsWhere_(sheetName, column, value) {
+  const sheet = getSheet_(sheetName);
+  readSheetAsObjects_(sheetName)
+    .filter((row) => row[column] === value)
+    .map((row) => row.__rowNumber)
+    .sort((a, b) => b - a)
+    .forEach((rowNumber) => sheet.deleteRow(rowNumber));
+}
+
+function listActions_() {
+  return readSheetAsObjects_(SHEET_NAMES.ACTIONS).map((a) => ({
+    id: a.id,
+    title: a.title,
+    isDaily: a.isDaily === true || a.isDaily === 'TRUE' || a.isDaily === 'true',
+    createdAt: a.createdAt,
+  }));
+}
+
+function createAction_(payload) {
+  const action = {
+    id: uuid_(),
+    title: payload.title,
+    isDaily: Boolean(payload.isDaily),
+    createdAt: nowIso_(),
+  };
+  getSheet_(SHEET_NAMES.ACTIONS).appendRow([action.id, action.title, action.isDaily, action.createdAt]);
+  return action;
+}
+
+function updateAction_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.ACTIONS, payload.id);
+  if (rowNumber === -1) throw new Error('Action not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.ACTIONS)
+    .getRange(rowNumber, 2, 1, 2)
+    .setValues([[payload.title, Boolean(payload.isDaily)]]);
+  return { id: payload.id, title: payload.title, isDaily: Boolean(payload.isDaily) };
+}
+
+function deleteAction_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.ACTIONS, payload.id);
+  if (rowNumber === -1) throw new Error('Action not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.ACTIONS).deleteRow(rowNumber);
+  deleteRowsWhere_(SHEET_NAMES.ACTION_LOGS, 'actionId', payload.id);
+  return { id: payload.id };
+}
+
+function listActionLogs_() {
+  return readSheetAsObjects_(SHEET_NAMES.ACTION_LOGS).map((l) => ({
+    date: normalizeDate_(l.date),
+    actionId: l.actionId,
+  }));
+}
+
+function setActionLog_(payload) {
+  const key = payload.date + '|' + payload.actionId;
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.ACTION_LOGS, key);
+  const sheet = getSheet_(SHEET_NAMES.ACTION_LOGS);
+  if (payload.done && rowNumber === -1) {
+    sheet.appendRow([key, payload.date, payload.actionId]);
+  } else if (!payload.done && rowNumber !== -1) {
+    sheet.deleteRow(rowNumber);
+  }
+  return { date: payload.date, actionId: payload.actionId, done: Boolean(payload.done) };
+}
+
 // ===== ENTRY POINT =====
 function doPost(e) {
   try {
@@ -330,6 +471,34 @@ function doPost(e) {
         return jsonResponse_({ ok: true, result: getMonthlySummary_(payload) });
       case 'saveMonthlySummary':
         return jsonResponse_({ ok: true, result: saveMonthlySummary_(payload) });
+
+      case 'listGoals':
+        return jsonResponse_({ ok: true, result: listGoals_() });
+      case 'createGoal':
+        return jsonResponse_({ ok: true, result: createGoal_(payload) });
+      case 'updateGoal':
+        return jsonResponse_({ ok: true, result: updateGoal_(payload) });
+      case 'deleteGoal':
+        return jsonResponse_({ ok: true, result: deleteGoal_(payload) });
+      case 'createGoalItem':
+        return jsonResponse_({ ok: true, result: createGoalItem_(payload) });
+      case 'updateGoalItem':
+        return jsonResponse_({ ok: true, result: updateGoalItem_(payload) });
+      case 'deleteGoalItem':
+        return jsonResponse_({ ok: true, result: deleteGoalItem_(payload) });
+
+      case 'listActions':
+        return jsonResponse_({ ok: true, result: listActions_() });
+      case 'createAction':
+        return jsonResponse_({ ok: true, result: createAction_(payload) });
+      case 'updateAction':
+        return jsonResponse_({ ok: true, result: updateAction_(payload) });
+      case 'deleteAction':
+        return jsonResponse_({ ok: true, result: deleteAction_(payload) });
+      case 'listActionLogs':
+        return jsonResponse_({ ok: true, result: listActionLogs_() });
+      case 'setActionLog':
+        return jsonResponse_({ ok: true, result: setActionLog_(payload) });
 
       default:
         return jsonResponse_({ ok: false, error: 'Unknown action: ' + action });

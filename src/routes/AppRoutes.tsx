@@ -7,6 +7,7 @@ import KnowledgePage from '@/pages/KnowledgePage';
 import KnowledgeEditorPage from '@/pages/KnowledgeEditorPage';
 import TagsPage from '@/pages/TagsPage';
 import TagDetailPage from '@/pages/TagDetailPage';
+import GoalsPage from '@/pages/GoalsPage';
 import SummaryEditorPage from '@/pages/SummaryEditorPage';
 
 function AppRoutes() {
@@ -21,6 +22,7 @@ function AppRoutes() {
       <Route path="/knowledge" element={<KnowledgePage />} />
       <Route path="/knowledge/new" element={<KnowledgeEditorPage />} />
       <Route path="/knowledge/:id/edit" element={<KnowledgeEditorPage />} />
+      <Route path="/goals" element={<GoalsPage />} />
       <Route path="/tags" element={<TagsPage />} />
       <Route path="/tags/:tagId" element={<TagDetailPage />} />
     </Routes>

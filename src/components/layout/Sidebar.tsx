@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BookText, LogOut, Search, Tags as TagsIcon, Plus } from 'lucide-react';
+import { BookText, LogOut, Search, Tags as TagsIcon, Plus, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { STORAGE_KEY } from '@/components/PasswordGate';
@@ -7,6 +7,7 @@ import { STORAGE_KEY } from '@/components/PasswordGate';
 const navItems = [
   { to: '/', label: 'Timeline', icon: BookText, end: true },
   { to: '/knowledge', label: 'Knowledge', icon: Search, end: false },
+  { to: '/goals', label: 'Goals & Action', icon: Target, end: false },
   { to: '/tags', label: 'Tags', icon: TagsIcon, end: false },
 ];
 
