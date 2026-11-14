@@ -23,7 +23,7 @@ function Sidebar() {
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-border md:bg-background md:p-6">
-      <div className="mb-8 text-lg font-semibold">Knowledge Journal</div>
+      <div className="mb-8 text-lg font-semibold">Personal Development</div>
       <Button onClick={() => navigate('/knowledge/new')} variant="outline" className="mb-6">
         <Plus className="h-4 w-4" />
         Tambah Knowledge
