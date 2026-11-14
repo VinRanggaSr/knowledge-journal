@@ -1,5 +1,5 @@
 import { apiRequest } from '@/services/api/client';
-import type { Action, ActionLog, Goal, GoalItem, GoalsData } from '@/types';
+import type { Action, ActionLog, Goal, GoalItem, GoalsData, Sacrifice } from '@/types';
 
 export function listGoals(): Promise<GoalsData> {
   return apiRequest<GoalsData>({ action: 'listGoals' });
@@ -51,4 +51,20 @@ export function listActionLogs(): Promise<ActionLog[]> {
 
 export function setActionLog(payload: { date: string; actionId: string; done: boolean }) {
   return apiRequest<{ date: string; actionId: string; done: boolean }>({ action: 'setActionLog', payload });
+}
+
+export function listSacrifices(): Promise<Sacrifice[]> {
+  return apiRequest<Sacrifice[]>({ action: 'listSacrifices' });
+}
+
+export function createSacrifice(payload: { text: string }): Promise<Sacrifice> {
+  return apiRequest<Sacrifice>({ action: 'createSacrifice', payload });
+}
+
+export function updateSacrifice(payload: { id: string; text: string }): Promise<Sacrifice> {
+  return apiRequest<Sacrifice>({ action: 'updateSacrifice', payload });
+}
+
+export function deleteSacrifice(payload: { id: string }): Promise<{ id: string }> {
+  return apiRequest<{ id: string }>({ action: 'deleteSacrifice', payload });
 }

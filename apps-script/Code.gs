@@ -8,6 +8,7 @@ const SHEET_NAMES = {
   GOAL_ITEMS: 'GoalItems',
   ACTIONS: 'Actions',
   ACTION_LOGS: 'ActionLogs',
+  SACRIFICES: 'Sacrifices',
 };
 
 const SHEET_HEADERS = {
@@ -19,6 +20,7 @@ const SHEET_HEADERS = {
   GoalItems: ['id', 'goalId', 'text', 'createdAt'],
   Actions: ['id', 'title', 'isDaily', 'createdAt'],
   ActionLogs: ['key', 'date', 'actionId'],
+  Sacrifices: ['id', 'text', 'createdAt'],
 };
 
 // ===== SETUP (jalankan SEKALI secara manual dari editor Apps Script) =====
@@ -429,6 +431,35 @@ function setActionLog_(payload) {
   return { date: payload.date, actionId: payload.actionId, done: Boolean(payload.done) };
 }
 
+// ===== SACRIFICES =====
+function listSacrifices_() {
+  return readSheetAsObjects_(SHEET_NAMES.SACRIFICES).map((s) => ({
+    id: s.id,
+    text: s.text,
+    createdAt: s.createdAt,
+  }));
+}
+
+function createSacrifice_(payload) {
+  const item = { id: uuid_(), text: payload.text, createdAt: nowIso_() };
+  getSheet_(SHEET_NAMES.SACRIFICES).appendRow([item.id, item.text, item.createdAt]);
+  return item;
+}
+
+function updateSacrifice_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.SACRIFICES, payload.id);
+  if (rowNumber === -1) throw new Error('Sacrifice not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.SACRIFICES).getRange(rowNumber, 2).setValue(payload.text);
+  return { id: payload.id, text: payload.text };
+}
+
+function deleteSacrifice_(payload) {
+  const rowNumber = findRowNumberByKey_(SHEET_NAMES.SACRIFICES, payload.id);
+  if (rowNumber === -1) throw new Error('Sacrifice not found: ' + payload.id);
+  getSheet_(SHEET_NAMES.SACRIFICES).deleteRow(rowNumber);
+  return { id: payload.id };
+}
+
 // ===== ENTRY POINT =====
 function doPost(e) {
   try {
@@ -499,6 +530,15 @@ function doPost(e) {
         return jsonResponse_({ ok: true, result: listActionLogs_() });
       case 'setActionLog':
         return jsonResponse_({ ok: true, result: setActionLog_(payload) });
+
+      case 'listSacrifices':
+        return jsonResponse_({ ok: true, result: listSacrifices_() });
+      case 'createSacrifice':
+        return jsonResponse_({ ok: true, result: createSacrifice_(payload) });
+      case 'updateSacrifice':
+        return jsonResponse_({ ok: true, result: updateSacrifice_(payload) });
+      case 'deleteSacrifice':
+        return jsonResponse_({ ok: true, result: deleteSacrifice_(payload) });
 
       default:
         return jsonResponse_({ ok: false, error: 'Unknown action: ' + action });

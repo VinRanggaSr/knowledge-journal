@@ -2,10 +2,12 @@ import { useSearchParams } from 'react-router-dom';
 import ActionsTab from '@/components/goals/ActionsTab';
 import ChecklistTab from '@/components/goals/ChecklistTab';
 import GoalsTab from '@/components/goals/GoalsTab';
+import SacrificesTab from '@/components/goals/SacrificesTab';
 import { cn } from '@/lib/utils';
 
 const TABS = [
   { value: 'goals', label: 'Goals', Component: GoalsTab },
+  { value: 'sacrifices', label: 'Dikorbankan', Component: SacrificesTab },
   { value: 'actions', label: 'Action', Component: ActionsTab },
   { value: 'checklist', label: 'Checklist', Component: ChecklistTab },
 ] as const;

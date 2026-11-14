@@ -65,3 +65,9 @@ export interface ActionLog {
   date: string; // YYYY-MM-DD
   actionId: string;
 }
+
+export interface Sacrifice {
+  id: string;
+  text: string;
+  createdAt: string;
+}
