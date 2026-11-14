@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils';
 import { STORAGE_KEY } from '@/components/PasswordGate';
 
 const navItems = [
+  { to: '/goals', label: 'Goals', icon: Target, end: false },
   { to: '/', label: 'Timeline', icon: BookText, end: true },
   { to: '/knowledge', label: 'Knowledge', icon: Search, end: false },
-  { to: '/goals', label: 'Goals', icon: Target, end: false },
   { to: '/tags', label: 'Tags', icon: TagsIcon, end: false },
 ];
 
