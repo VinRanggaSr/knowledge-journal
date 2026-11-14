@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, format, parseISO } from 'date-fns';
+import { id as idLocale } from 'date-fns/locale';
 import { Check, ChevronLeft, ChevronRight, ListChecks } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import ConsistencyChart from '@/components/goals/ConsistencyChart';
@@ -59,14 +60,18 @@ function ChecklistTab() {
             <button type="button" aria-label="Hari sebelumnya" onClick={() => shiftDay(-1)} className="rounded-full p-2 text-muted-foreground hover:bg-background">
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <button
-              type="button"
-              onClick={() => setDate(today)}
-              disabled={date === today}
-              className="rounded-full px-3 py-1 text-sm text-muted-foreground hover:bg-background disabled:opacity-40"
-            >
-              Hari ini
-            </button>
+            <label className="relative cursor-pointer rounded-full px-3 py-1 text-sm text-muted-foreground transition-colors hover:bg-background">
+              {date === today ? 'Hari ini' : format(parseISO(date), 'd MMM yyyy', { locale: idLocale })}
+              <input
+                type="date"
+                aria-label="Pilih tanggal"
+                value={date}
+                max={today}
+                onChange={(e) => e.target.value && setDate(e.target.value > today ? today : e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              />
+            </label>
             <button type="button" aria-label="Hari berikutnya" onClick={() => shiftDay(1)} disabled={date >= today} className="rounded-full p-2 text-muted-foreground hover:bg-background disabled:opacity-40">
               <ChevronRight className="h-4 w-4" />
             </button>
