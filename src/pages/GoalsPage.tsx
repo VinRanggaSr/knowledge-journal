@@ -9,7 +9,7 @@ const TABS = [
   { value: 'goals', label: 'Goals', Component: GoalsTab },
   { value: 'sacrifices', label: 'Dikorbankan', Component: SacrificesTab },
   { value: 'actions', label: 'Action', Component: ActionsTab },
-  { value: 'checklist', label: 'Checklist', Component: ChecklistTab },
+  { value: 'checklist', label: 'Track Activity', Component: ChecklistTab },
 ] as const;
 
 function GoalsPage() {
