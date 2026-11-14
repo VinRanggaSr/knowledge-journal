@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buildSeries, summarize, type Granularity, type Trend } from '@/lib/consistency';
@@ -16,8 +16,7 @@ const TREND_META: Record<Trend, { label: string; icon: typeof ArrowRight; classN
   down: { label: 'Menurun', icon: ArrowDownRight, className: 'bg-red-50 text-red-700' },
 };
 
-const W = 600;
-const H = 220;
+const H = 200;
 const PAD = { top: 16, right: 16, bottom: 28, left: 36 };
 
 interface ConsistencyChartProps {
@@ -28,6 +27,16 @@ interface ConsistencyChartProps {
 
 function ConsistencyChart({ actions, logs, today }: ConsistencyChartProps) {
   const [granularity, setGranularity] = useState<Granularity>('daily');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [W, setW] = useState(600);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => setW(Math.max(240, Math.round(entry.contentRect.width))));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const series = useMemo(() => buildSeries(granularity, actions, logs, today), [granularity, actions, logs, today]);
   // periode terakhir masih berjalan, jadi tidak ikut menentukan rata-rata & tren
@@ -89,8 +98,9 @@ function ConsistencyChart({ actions, logs, today }: ConsistencyChartProps) {
         )}
       </div>
 
+      <div ref={containerRef} className="w-full">
       {hasData ? (
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Grafik konsistensi action">
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="block" role="img" aria-label="Grafik konsistensi action">
           {[0, 50, 100].map((v) => (
             <g key={v}>
               <line x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--color-border)" strokeDasharray="4 4" />
@@ -129,6 +139,7 @@ function ConsistencyChart({ actions, logs, today }: ConsistencyChartProps) {
           Belum ada data. Aktifkan switch &quot;setiap hari&quot; pada action, lalu mulai centang checklist.
         </p>
       )}
+      </div>
       <p className="text-xs text-muted-foreground">
         {OPTIONS.find((o) => o.value === granularity)?.hint} · persentase = action tercentang dibagi action harian yang aktif.
       </p>
