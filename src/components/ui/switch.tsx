@@ -18,7 +18,7 @@ function Switch({ checked, onCheckedChange, id, disabled }: SwitchProps) {
       onClick={() => onCheckedChange(!checked)}
       className={cn(
         'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-50',
-        checked ? 'bg-foreground' : 'bg-border',
+        checked ? 'bg-tag-green-text' : 'bg-border',
       )}
     >
       <span
